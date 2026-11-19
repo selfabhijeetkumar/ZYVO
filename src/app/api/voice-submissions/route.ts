@@ -49,9 +49,14 @@ export async function POST(req: NextRequest) {
     let hintKey: string | undefined;
     let manualTranscript: string | undefined;
 
-    const audioDir = path.join(process.cwd(), 'storage', 'audio');
+    const dbDir = process.env.VERCEL ? '/tmp' : process.cwd();
+    const audioDir = path.join(dbDir, 'storage', 'audio');
     if (!fs.existsSync(audioDir)) {
-      fs.mkdirSync(audioDir, { recursive: true });
+      try {
+        fs.mkdirSync(audioDir, { recursive: true });
+      } catch {
+        // Fallback for containerized environments
+      }
     }
     const audioFilePath = path.join(audioDir, `${submissionId}.webm`);
 

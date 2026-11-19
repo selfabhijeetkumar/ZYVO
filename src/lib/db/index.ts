@@ -11,14 +11,18 @@ export function getDb(): DatabaseSync {
     return globalDb;
   }
 
-  // Determine database file path: root of project
-  const dbDir = process.cwd();
-  const dbPath = path.join(dbDir, 'zyvo.db');
+  // Determine database file path: in serverless (e.g. Vercel), use /tmp for ephemeral execution
+  const dbDir = process.env.VERCEL ? '/tmp' : process.cwd();
+  const dbPath = process.env.DATABASE_PATH || path.join(dbDir, 'zyvo.db');
 
   // Ensure storage/audio directory exists as well for voice submissions
   const audioDir = path.join(dbDir, 'storage', 'audio');
   if (!fs.existsSync(audioDir)) {
-    fs.mkdirSync(audioDir, { recursive: true });
+    try {
+      fs.mkdirSync(audioDir, { recursive: true });
+    } catch {
+      // Graceful fallback for read-only containers
+    }
   }
 
   const db = new DatabaseSync(dbPath);
