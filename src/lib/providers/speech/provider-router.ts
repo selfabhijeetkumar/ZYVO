@@ -5,12 +5,16 @@ interface CircuitState {
   failureCount: number;
   lastFailureTime?: number;
   isOpen: boolean;
+  lastLatencyMs?: number;
+  lastError?: string;
+  lastSuccessTime?: number;
 }
 
 export class SpeechProviderRouter {
   private circuitStates = new Map<string, CircuitState>();
   private readonly failureThreshold = 3;
   private readonly cooldownMs = 60000; // 1 minute
+  private lastActiveProvider: string = 'mock';
 
   private getCircuit(providerId: string): CircuitState {
     let state = this.circuitStates.get(providerId);
@@ -21,16 +25,21 @@ export class SpeechProviderRouter {
     return state;
   }
 
-  public recordSuccess(providerId: string): void {
+  public recordSuccess(providerId: string, latencyMs: number): void {
     const circuit = this.getCircuit(providerId);
     circuit.failureCount = 0;
     circuit.isOpen = false;
+    circuit.lastLatencyMs = latencyMs;
+    circuit.lastSuccessTime = Date.now();
+    circuit.lastError = undefined;
+    this.lastActiveProvider = providerId;
   }
 
-  public recordFailure(providerId: string): void {
+  public recordFailure(providerId: string, errorMsg: string): void {
     const circuit = this.getCircuit(providerId);
     circuit.failureCount += 1;
     circuit.lastFailureTime = Date.now();
+    circuit.lastError = errorMsg;
     if (circuit.failureCount >= this.failureThreshold) {
       circuit.isOpen = true;
     }
@@ -68,8 +77,13 @@ export class SpeechProviderRouter {
         status,
         circuitOpen: circuit.isOpen,
         failureCount: circuit.failureCount,
+        lastError: circuit.lastError ? circuit.lastError.slice(0, 150) : undefined,
       };
     });
+  }
+
+  public getLastActiveProvider(): string {
+    return this.lastActiveProvider;
   }
 
   public async transcribe(
@@ -78,8 +92,9 @@ export class SpeechProviderRouter {
     options?: TranscriptionOptions
   ): Promise<TranscriptionResult> {
     const primaryId = process.env.STT_PRIMARY_PROVIDER || 'sarvam';
-    const fallbackIds = (process.env.STT_FALLBACK_PROVIDERS || 'groq,mock').split(',').map((s) => s.trim());
-    const candidates = [primaryId, ...fallbackIds];
+    const fallbackEnv = process.env.STT_FALLBACK_PROVIDERS || 'gemini,groq,mock';
+    const fallbackIds = fallbackEnv.split(',').map((s) => s.trim());
+    const candidates = [primaryId, ...fallbackIds.filter((id) => id !== primaryId)];
 
     for (const candidateId of candidates) {
       const provider = speechRegistry.get(candidateId);
@@ -93,20 +108,25 @@ export class SpeechProviderRouter {
         continue;
       }
 
+      const start = Date.now();
       try {
         const result = await provider.transcribe(audioBuffer, mimeType, options);
-        this.recordSuccess(candidateId);
+        const latency = Date.now() - start;
+        this.recordSuccess(candidateId, latency);
         return result;
       } catch (err: any) {
-        this.recordFailure(candidateId);
-        // Continue to fallback
+        const errMessage = err?.message || String(err);
+        this.recordFailure(candidateId, errMessage);
+        // Failover to next configured provider in chain
       }
     }
 
-    // Always fallback to mock evaluator if external calls are disabled
+    // Always fallback to deterministic benchmark evaluator if external providers fail or are unconfigured
     const mock = speechRegistry.get('mock');
     if (mock) {
-      return mock.transcribe(audioBuffer, mimeType, options);
+      const result = await mock.transcribe(audioBuffer, mimeType, options);
+      this.lastActiveProvider = 'mock';
+      return result;
     }
 
     throw new Error('No speech-to-text providers are available.');

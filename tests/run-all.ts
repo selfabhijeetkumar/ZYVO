@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 
 console.log('====================================================');
-console.log('   ZYVO PLATFORM TEST RUNNER — ALL 11 SUITES');
+console.log('   ZYVO PLATFORM TEST RUNNER — ALL 12 SUITES');
 console.log('====================================================\n');
 
 const suites = [
@@ -9,6 +9,7 @@ const suites = [
   'tests/registry.test.ts',
   'tests/database.test.ts',
   'tests/lifecycle.test.ts',
+  'tests/providers.test.ts',
   'tests/milk.test.ts',
   'tests/kirana.test.ts',
   'tests/vegetable.test.ts',
