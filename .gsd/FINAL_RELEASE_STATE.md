@@ -3,7 +3,7 @@
 
 **Product:** ZYVO  
 **Initiative:** REWIRED · **Official Track:** Track ECHO  
-**Release Timestamp:** 2026-11-19T16:32:00+05:30  
+**Release Timestamp:** 2026-11-19T16:40:00+05:30  
 
 ---
 
@@ -11,9 +11,10 @@
 
 | Deliverable | Official Status | Verification Reference |
 |---|---|---|
-| **1. GitHub Repository Release** | **PUSHED AND VERIFIED** | [https://github.com/selfabhijeetkumar/ZYVO](https://github.com/selfabhijeetkumar/ZYVO) (`main` branch, SHA `ae32044c48e17cbc1543ec8efa468e1c92fb127c`) |
+| **1. GitHub Repository Release** | **PUSHED AND VERIFIED** | [https://github.com/selfabhijeetkumar/ZYVO](https://github.com/selfabhijeetkumar/ZYVO) (`main` branch) |
 | **2. Vercel Deployment** | **PREVIEW & PRODUCTION DEPLOYED AND VERIFIED** | [https://zyvo-delta.vercel.app](https://zyvo-delta.vercel.app) (`dpl_F99KoMyCf5mzeSRL1BSHCdG3PUf4`) |
-| **3. 60-Second Demo Video** | **MP4 CREATED AND VERIFIED** | `artifacts/ZYVO_60_SECOND_DEMO.mp4` (60.00s, 1920×1080, 30fps, H.264) |
+| **3. Live Link on GitHub** | **LINKED AND VERIFIED** | README prominent section + GitHub About Website field |
+| **4. 60-Second Demo Video** | **MP4 CREATED AND VERIFIED** | `artifacts/ZYVO_60_SECOND_DEMO.mp4` (60.00s, 1920×1080, 30fps, H.264) |
 
 ---
 
@@ -22,9 +23,10 @@
 ### A. GitHub Repository
 - **Repository:** `selfabhijeetkumar/ZYVO`
 - **Branch:** `main`
-- **Commit SHA:** `ae32044c48e17cbc1543ec8efa468e1c92fb127c`
-- **Commit Message:** `chore(release): upload complete ZYVO application and documentation`
-- **Contents:** Full Next.js 16 application source (`src/`, `public/`, `scripts/`, `tests/`), comprehensive `README.md`, preserved root specifications (`GSD-STYLE.md`, `PROJECT_RULES.md`, `VERSION`, `model_capabilities.yaml`, `.gsd/`).
+- **Contents:** Full Next.js 16 application source (`src/`, `public/`, `scripts/`, `tests/`), comprehensive `README.md` with live link, preserved root specifications (`GSD-STYLE.md`, `PROJECT_RULES.md`, `VERSION`, `model_capabilities.yaml`, `.gsd/`).
+- **About Section:**
+  - Website: `https://zyvo-delta.vercel.app`
+  - Description: *"ZYVO is a multilingual, voice-first business operations platform supporting five industry-specific workflows."*
 - **Security Scan:** Zero private keys or `.env.local` credentials committed (`.gitignore` enforced).
 
 ### B. Vercel Deployment
@@ -43,7 +45,7 @@
 - **Duration:** Exactly 60.00 seconds (1,800 frames at 30 fps).
 - **Resolution:** 1920 × 1080 (1080p Full HD).
 - **Video Codec:** H.264 (`libx264`, `yuv420p`, High Profile).
-- **File Size:** 1.34 MB (1,409,265 bytes).
+- **File Size:** 1.34 MB (1,400,285 bytes).
 - **Visuals:** 100% genuine screen captures from the running application covering all 5 industry modules, the 3D Voice Core, and the immutable audit ledger.
 
 ---
@@ -52,9 +54,10 @@
 
 1. **GitHub Repository Review:**
    - The repository is live and public at [https://github.com/selfabhijeetkumar/ZYVO](https://github.com/selfabhijeetkumar/ZYVO).
+   - Website link displays `https://zyvo-delta.vercel.app`.
 2. **Vercel Cloud External API Keys (Optional):**
    - In the [Vercel Project Dashboard](https://vercel.com/selfabhijeetkumar-9786s-projects/zyvo/settings/environment-variables), add `SARVAM_API_KEY`, `GOOGLE_AI_API_KEY`, and set `EXTERNAL_API_ENABLED=true` if you wish to activate live cloud speech recognition in addition to the local environment.
 3. **Hackathon Submission:**
-   - Link repository: `https://github.com/selfabhijeetkumar/ZYVO`
+   - Repository: `https://github.com/selfabhijeetkumar/ZYVO`
    - Live URL: `https://zyvo-delta.vercel.app`
    - Demo Video: `artifacts/ZYVO_60_SECOND_DEMO.mp4`

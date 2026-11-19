@@ -11,6 +11,17 @@
 
 ---
 
+## Live Application
+
+**Live Demo:** [OPEN ZYVO](https://zyvo-delta.vercel.app)
+
+- **Production Deployment URL:** [https://zyvo-delta.vercel.app](https://zyvo-delta.vercel.app)
+- **Vercel Project:** `selfabhijeetkumar-9786s-projects/zyvo`
+- **Deployment Status:** ● Ready & Verified
+- **Demonstration Scope:** Evaluates with container-scoped ephemeral SQLite storage (`/tmp/zyvo.db`) and fallback mode enabled by default to safeguard credentials.
+
+---
+
 ## 1. Executive Overview
 
 **ZYVO** is an enterprise-grade, multilingual, voice-first business operations platform designed for Indian small-and-medium commerce. Rather than presenting generic chatbot interfaces, ZYVO turns voice audio (Hindi, Hinglish, English, vernacular dialects) into verified, schema-conforming business transactions across **five distinct industry modules** through a unified operations pipeline.
