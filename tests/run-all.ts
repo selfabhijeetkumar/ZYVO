@@ -9,6 +9,7 @@ const suites = [
   'tests/registry.test.ts',
   'tests/database.test.ts',
   'tests/lifecycle.test.ts',
+  'tests/milk.test.ts',
 ];
 
 for (const suite of suites) {
@@ -23,5 +24,5 @@ for (const suite of suites) {
 }
 
 console.log('====================================================');
-console.log('   ALL 4 TEST SUITES PASSED EMPIRICALLY (100%)');
+console.log('   ALL 5 TEST SUITES PASSED EMPIRICALLY (100%)');
 console.log('====================================================');
