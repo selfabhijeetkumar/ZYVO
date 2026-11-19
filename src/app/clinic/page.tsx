@@ -419,16 +419,19 @@ export default function ClinicAppointmentsPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] text-[#8B9CB5]">Administrative Note (Non-Diagnostic)</label>
-                <input
-                  type="text"
-                  value={patientNotes}
+                <label className="text-[11px] text-[#8B9CB5]">Scheduling Purpose (Non-Diagnostic Logistics)</label>
+                <select
+                  value={patientNotes || 'Routine General Consultation'}
                   onChange={(e) => setPatientNotes(e.target.value)}
-                  placeholder="e.g. Regular health checkup or followup"
                   className="w-full bg-[#151415] border border-[#2A2C30] rounded-lg px-3 py-2 text-xs text-[#F1EADE] focus:outline-none focus:border-blue-500"
-                />
+                >
+                  <option value="Routine General Consultation">Routine General Consultation</option>
+                  <option value="Follow-up Consultation">Follow-up Consultation</option>
+                  <option value="Report Review & Discussion">Report Review & Discussion</option>
+                  <option value="General Health Fitness Check">General Health Fitness Check</option>
+                </select>
                 <p className="text-[10px] text-[#8B9CB5]">
-                  Strictly administrative. Entering medical symptoms will trigger rejection.
+                  Strictly administrative logistics. Freeform medical symptoms are blocked server-side.
                 </p>
               </div>
 

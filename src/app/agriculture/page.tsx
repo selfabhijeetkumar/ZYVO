@@ -247,8 +247,10 @@ export default function AgriculturePage() {
             <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#F1EADE]">Active Mandi Crop Procurement Rates</h3>
-                  <p className="text-xs text-[#8B9CB5]">Guaranteed benchmark prices per quintal for registered crops</p>
+                  <h3 className="text-sm font-semibold text-[#F1EADE]">Crop Procurement Rate Board</h3>
+                  <p className="text-xs text-[#8B9CB5]">
+                    Official MSP benchmarks (PIB PRID 2269182) for mandated crops and indicative spot rates for non-MSP produce
+                  </p>
                 </div>
                 <button
                   onClick={loadData}
@@ -263,6 +265,7 @@ export default function AgriculturePage() {
                 {crops.map((c) => {
                   const isSelected = c.id === selectedCropId;
                   const ratePerQuintal = (c.indicative_rate_paise_per_quintal / 100).toLocaleString('en-IN');
+                  const isMsp = c.is_msp_mandated === 1;
 
                   return (
                     <div
@@ -274,20 +277,53 @@ export default function AgriculturePage() {
                           : 'bg-[#151415] border-[#2A2C30] hover:border-amber-500/40'
                       }`}
                     >
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-mono text-[#8B9CB5] uppercase">{c.variety}</span>
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <span
+                            className={`text-[10px] font-semibold px-2 py-0.5 rounded border font-mono ${
+                              isMsp
+                                ? 'bg-emerald-950/60 text-emerald-300 border-emerald-800'
+                                : 'bg-zinc-900 text-zinc-400 border-zinc-700'
+                            }`}
+                          >
+                            {isMsp ? 'Official MSP' : 'Indicative Spot'}
+                          </span>
                           <span className="text-xs font-bold text-emerald-400 font-mono">
-                            ₹{ratePerQuintal} / quintal
+                            ₹{ratePerQuintal} / q
                           </span>
                         </div>
                         <h4 className="text-sm font-bold text-[#F1EADE]">{c.crop_name}</h4>
+                        <p className="text-[11px] text-[#8B9CB5]">Variety: {c.variety}</p>
+
+                        {isMsp ? (
+                          <div className="text-[10px] text-emerald-400/90 space-y-0.5 pt-1 border-t border-[#2A2C30]">
+                            <div>Season: {c.marketing_season || 'RMS 2025-26'}</div>
+                            <div className="truncate">
+                              Source: {c.source_name || 'CCEA, Govt. of India (PIB)'}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-[10px] text-[#8B9CB5] pt-1 border-t border-[#2A2C30]">
+                            Non-MSP crop · Mandi negotiated spot value
+                          </div>
+                        )}
                       </div>
 
-                      <div className="mt-3 pt-3 border-t border-[#2A2C30] flex items-center justify-between text-xs">
+                      <div className="mt-3 pt-2.5 border-t border-[#2A2C30] flex items-center justify-between text-xs">
                         <span className={isSelected ? 'text-amber-400 font-semibold' : 'text-[#8B9CB5]'}>
                           {isSelected ? 'Selected Crop' : 'Click to select'}
                         </span>
+                        {c.source_url && (
+                          <a
+                            href={c.source_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-[10px] text-blue-400 hover:underline"
+                          >
+                            PIB Ref ↗
+                          </a>
+                        )}
                       </div>
                     </div>
                   );
@@ -377,7 +413,9 @@ export default function AgriculturePage() {
 
                 <div className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg space-y-1">
                   <div className="flex justify-between text-[#8B9CB5]">
-                    <span>Standard Mandi Rate</span>
+                    <span>
+                      {selectedCrop?.is_msp_mandated === 1 ? 'Official MSP Rate' : 'Indicative Mandi Rate'}
+                    </span>
                     <span className="font-mono">
                       ₹{((selectedCrop?.indicative_rate_paise_per_quintal || 150000) / 100).toLocaleString('en-IN')}/q
                     </span>
@@ -388,6 +426,9 @@ export default function AgriculturePage() {
                       ₹{(estimatedPayoutPaise / 100).toLocaleString('en-IN')}
                     </span>
                   </div>
+                  <p className="text-[10px] text-[#8B9CB5] pt-1">
+                    Indicative payout estimate based on quality inspection; not a government purchase guarantee.
+                  </p>
                 </div>
 
                 <button

@@ -47,8 +47,8 @@ async function runTests() {
   const wheatResult = await agricultureHandler.applyTransaction(db, 'sub_test_agri_wheat', wheatPayload, 'user_customer_01');
   assert.strictEqual(wheatResult.success, true);
   assert.ok(wheatResult.details, 'Transaction details must be defined');
-  // Wheat is ₹2,450/quintal (245,000 paise) -> 20 quintals * 245,000 = 4,900,000 paise (₹49,000.00)
-  assert.strictEqual(wheatResult.details.totalPayoutPaise, 4900000, '20 quintals of wheat should equal 4,900,000 paise');
+  // Wheat is ₹2,425/quintal (242,500 paise, PIB official MSP) -> 20 quintals * 242,500 = 4,850,000 paise (₹48,500.00)
+  assert.strictEqual(wheatResult.details.totalPayoutPaise, 4850000, '20 quintals of wheat should equal 4,850,000 paise');
 
   // Verify DB entities
   const reqRecord = db.prepare('SELECT * FROM agri_procurement_requests WHERE id = ?').get(wheatResult.entityId) as any;
@@ -58,7 +58,7 @@ async function runTests() {
   const itemRecord = db.prepare('SELECT * FROM agri_procurement_items WHERE request_id = ?').get(wheatResult.entityId) as any;
   assert.strictEqual(itemRecord.crop_name, 'Wheat');
   assert.strictEqual(itemRecord.quantity_quintals, 20);
-  assert.strictEqual(itemRecord.subtotal_paise, 4900000);
+  assert.strictEqual(itemRecord.subtotal_paise, 4850000);
 
   const schedRecord = db.prepare('SELECT * FROM agri_pickup_schedules WHERE request_id = ?').get(wheatResult.entityId) as any;
   assert.strictEqual(schedRecord.pickup_location, 'Warehouse Gate 3');

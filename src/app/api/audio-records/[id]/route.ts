@@ -16,8 +16,12 @@ export async function GET(
   }
 
   const filePath = submission.audio_file_path;
-  if (!fs.existsSync(filePath)) {
-    return NextResponse.json({ error: 'Audio file not found on storage disk' }, { status: 404 });
+  const audioDir = path.resolve(process.cwd(), 'storage', 'audio');
+  const resolvedPath = path.resolve(filePath);
+
+  // Security check: IDOR & Path traversal prevention
+  if (!resolvedPath.startsWith(audioDir) || !fs.existsSync(resolvedPath)) {
+    return NextResponse.json({ error: 'Audio file not accessible or not found on storage disk' }, { status: 404 });
   }
 
   const stat = fs.statSync(filePath);

@@ -82,6 +82,23 @@ export async function POST(req: NextRequest) {
       audioBuffer = Buffer.alloc(1024); // synthetic audio
     }
 
+    // Enforce audio upload limits: 10 MB maximum size
+    if (audioBuffer.length > 10 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: 'Audio payload exceeds maximum allowed size of 10 MB' },
+        { status: 400 }
+      );
+    }
+
+    // Validate audio MIME types
+    const allowedMimes = ['audio/webm', 'audio/mp4', 'audio/wav', 'audio/ogg', 'audio/mpeg', 'audio/x-m4a', 'application/octet-stream'];
+    if (!allowedMimes.some((m) => mimeType.toLowerCase().startsWith(m.split('/')[0]))) {
+      return NextResponse.json(
+        { error: `Invalid audio format: ${mimeType}. Expected WebM, MP4, WAV, or OGG audio.` },
+        { status: 400 }
+      );
+    }
+
     // Save audio file to storage/audio/
     fs.writeFileSync(audioFilePath, audioBuffer);
 

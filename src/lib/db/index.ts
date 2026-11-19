@@ -1,7 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import path from 'node:path';
 import fs from 'node:fs';
-import { SCHEMA_SQL, seedInitialData } from './schema';
+import { SCHEMA_SQL, seedInitialData, runSchemaMigrations } from './schema';
 
 // Module singleton for SQLite database connection
 let globalDb: DatabaseSync | null = null;
@@ -32,6 +32,9 @@ export function getDb(): DatabaseSync {
 
   // Seed default demonstration users, workspaces and domain catalogs
   seedInitialData(db);
+
+  // Run schema migrations and integrity updates
+  runSchemaMigrations(db);
 
   globalDb = db;
   return db;

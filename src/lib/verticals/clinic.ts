@@ -19,6 +19,24 @@ export const clinicHandler: VerticalHandler = {
       errors.push('Privacy violation: ZYVO handles non-diagnostic appointment scheduling only. Clinical data must not be stored.');
     }
 
+    // Server-side boundary: Scan all payload content for prohibited clinical/diagnostic keywords
+    const prohibitedKeywords = [
+      'fever', 'cough', 'pain', 'bp', 'sugar', 'ache', 'vomit', 'headache',
+      'cold', 'infection', 'bleed', 'rash', 'swelling', 'asthma', 'tablet',
+      'medicine', 'dose', 'prescription', 'diagnosis', 'antibiotic', 'paracetamol',
+      'disease', 'illness', 'nausea', 'fracture', 'wound', 'injury', 'cardiac',
+      'stomach', 'diarrhea', 'allergy', 'dengue', 'malaria', 'covid', 'flu'
+    ];
+
+    const payloadSerialized = JSON.stringify(payload).toLowerCase();
+    for (const kw of prohibitedKeywords) {
+      const regex = new RegExp(`\\b${kw}\\b`, 'i');
+      if (regex.test(payloadSerialized)) {
+        errors.push(`Privacy violation: Prohibited clinical term "${kw}" detected. ZYVO is restricted strictly to outpatient scheduling; clinical symptoms and medical data are never persisted.`);
+        break;
+      }
+    }
+
     return {
       valid: errors.length === 0,
       errors: errors.length > 0 ? errors : undefined,

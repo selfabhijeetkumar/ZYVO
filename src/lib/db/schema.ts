@@ -250,7 +250,17 @@ CREATE TABLE IF NOT EXISTS agri_crop_catalog (
   crop_name TEXT NOT NULL,
   variety TEXT NOT NULL,
   indicative_rate_paise_per_quintal INTEGER NOT NULL,
-  procurement_active INTEGER NOT NULL DEFAULT 1
+  procurement_active INTEGER NOT NULL DEFAULT 1,
+  is_msp_mandated INTEGER NOT NULL DEFAULT 0,
+  price_type TEXT NOT NULL DEFAULT 'indicative_market',
+  price_value INTEGER NOT NULL DEFAULT 0,
+  currency TEXT NOT NULL DEFAULT 'INR',
+  unit TEXT NOT NULL DEFAULT 'quintal',
+  marketing_season TEXT,
+  source_name TEXT,
+  source_url TEXT,
+  effective_date TEXT,
+  last_verified_at TEXT
 );
 
 CREATE TABLE IF NOT EXISTS agri_procurement_requests (
@@ -392,10 +402,130 @@ export function seedInitialData(db: any) {
   insertSlot.run('slot_02', 'ws_clinic_01', 'doc_01', '2026-11-20', '10:30:00', '11:00:00', 0, 1);
   insertSlot.run('slot_03', 'ws_clinic_01', 'doc_01', '2026-11-20', '11:00:00', '11:30:00', 0, 1);
 
-  // 8. Seed Agri Crop Catalog
-  const insertCrop = db.prepare('INSERT INTO agri_crop_catalog (id, workspace_id, crop_name, variety, indicative_rate_paise_per_quintal, procurement_active) VALUES (?, ?, ?, ?, ?, ?)');
-  insertCrop.run('crop_01', 'ws_agri_01', 'Tomato', 'Hybrid Red', 120000, 1); // ₹1,200/quintal
-  insertCrop.run('crop_02', 'ws_agri_01', 'Wheat', 'Sharbati A-Grade', 245000, 1); // ₹2,450/quintal
-  insertCrop.run('crop_03', 'ws_agri_01', 'Mustard Seed (Sarson)', 'Standard Yellow', 520000, 1); // ₹5,200/quintal
-  insertCrop.run('crop_04', 'ws_agri_01', 'Potato', 'Jyoti Khada', 95000, 1); // ₹950/quintal
+  // 8. Seed Agri Crop Catalog (PIB Official MSP Mandate Compliant)
+  // Official PIB Reference: https://www.pib.gov.in/PressReleasePage.aspx?PRID=2269182
+  // 22 Mandated MSP Crops: Wheat & Mustard are MSP-mandated. Tomato & Potato are Non-MSP horticultural crops!
+  const insertCrop = db.prepare(`
+    INSERT INTO agri_crop_catalog (
+      id, workspace_id, crop_name, variety, indicative_rate_paise_per_quintal,
+      procurement_active, is_msp_mandated, price_type, price_value, currency, unit,
+      marketing_season, source_name, source_url, effective_date, last_verified_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  // Crop 1: Tomato (Non-MSP Horticultural Crop)
+  insertCrop.run(
+    'crop_01', 'ws_agri_01', 'Tomato', 'Hybrid Red', 120000,
+    1, 0, 'indicative_market', 120000, 'INR', 'quintal',
+    'Kharif / Post-Monsoon 2026', 'Mandi Spot Benchmark (Non-MSP Horticultural Produce)', null, '2026-11-01', '2026-11-19'
+  );
+
+  // Crop 2: Wheat (Official Government MSP Mandated Crop)
+  insertCrop.run(
+    'crop_02', 'ws_agri_01', 'Wheat', 'Sharbati A-Grade', 242500,
+    1, 1, 'msp_benchmark', 242500, 'INR', 'quintal',
+    'Rabi Marketing Season (RMS) 2025-26', 'Cabinet Committee on Economic Affairs (CCEA), Govt. of India', 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2269182', '2025-04-01', '2026-11-19'
+  );
+
+  // Crop 3: Mustard Seed (Official Government MSP Mandated Crop - Rapeseed & Mustard)
+  insertCrop.run(
+    'crop_03', 'ws_agri_01', 'Mustard Seed (Sarson)', 'Standard Yellow', 595000,
+    1, 1, 'msp_benchmark', 595000, 'INR', 'quintal',
+    'Rabi Marketing Season (RMS) 2025-26', 'Cabinet Committee on Economic Affairs (CCEA), Govt. of India', 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2269182', '2025-04-01', '2026-11-19'
+  );
+
+  // Crop 4: Potato (Non-MSP Perishable Root Crop)
+  insertCrop.run(
+    'crop_04', 'ws_agri_01', 'Potato', 'Jyoti Khada', 95000,
+    1, 0, 'indicative_market', 95000, 'INR', 'quintal',
+    'Winter Crop 2026', 'Local Mandi Spot Benchmark (Non-MSP Perishable Produce)', null, '2026-11-01', '2026-11-19'
+  );
+}
+
+export function runSchemaMigrations(db: any) {
+  // Ensure new metadata columns exist in agri_crop_catalog
+  const columns = db.prepare("PRAGMA table_info(agri_crop_catalog)").all() as Array<{ name: string }>;
+  const colNames = new Set(columns.map((c) => c.name));
+
+  const newCols = [
+    { name: 'is_msp_mandated', ddl: 'INTEGER NOT NULL DEFAULT 0' },
+    { name: 'price_type', ddl: "TEXT NOT NULL DEFAULT 'indicative_market'" },
+    { name: 'price_value', ddl: 'INTEGER NOT NULL DEFAULT 0' },
+    { name: 'currency', ddl: "TEXT NOT NULL DEFAULT 'INR'" },
+    { name: 'unit', ddl: "TEXT NOT NULL DEFAULT 'quintal'" },
+    { name: 'marketing_season', ddl: 'TEXT' },
+    { name: 'source_name', ddl: 'TEXT' },
+    { name: 'source_url', ddl: 'TEXT' },
+    { name: 'effective_date', ddl: 'TEXT' },
+    { name: 'last_verified_at', ddl: 'TEXT' },
+  ];
+
+  for (const col of newCols) {
+    if (!colNames.has(col.name)) {
+      db.exec(`ALTER TABLE agri_crop_catalog ADD COLUMN ${col.name} ${col.ddl};`);
+    }
+  }
+
+  // Update existing records to adhere strictly to PIB MSP mandate
+  db.prepare(`
+    UPDATE agri_crop_catalog
+    SET is_msp_mandated = 1,
+        price_type = 'msp_benchmark',
+        price_value = 242500,
+        indicative_rate_paise_per_quintal = 242500,
+        currency = 'INR',
+        unit = 'quintal',
+        marketing_season = 'Rabi Marketing Season (RMS) 2025-26',
+        source_name = 'Cabinet Committee on Economic Affairs (CCEA), Govt. of India',
+        source_url = 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2269182',
+        effective_date = '2025-04-01',
+        last_verified_at = '2026-11-19'
+    WHERE crop_name = 'Wheat'
+  `).run();
+
+  db.prepare(`
+    UPDATE agri_crop_catalog
+    SET is_msp_mandated = 1,
+        price_type = 'msp_benchmark',
+        price_value = 595000,
+        indicative_rate_paise_per_quintal = 595000,
+        currency = 'INR',
+        unit = 'quintal',
+        marketing_season = 'Rabi Marketing Season (RMS) 2025-26',
+        source_name = 'Cabinet Committee on Economic Affairs (CCEA), Govt. of India',
+        source_url = 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2269182',
+        effective_date = '2025-04-01',
+        last_verified_at = '2026-11-19'
+    WHERE crop_name LIKE '%Mustard%'
+  `).run();
+
+  db.prepare(`
+    UPDATE agri_crop_catalog
+    SET is_msp_mandated = 0,
+        price_type = 'indicative_market',
+        price_value = 120000,
+        currency = 'INR',
+        unit = 'quintal',
+        marketing_season = 'Kharif / Post-Monsoon 2026',
+        source_name = 'Subhash Mandi Spot Rate (Non-MSP Horticultural Produce)',
+        source_url = NULL,
+        effective_date = '2026-11-01',
+        last_verified_at = '2026-11-19'
+    WHERE crop_name = 'Tomato'
+  `).run();
+
+  db.prepare(`
+    UPDATE agri_crop_catalog
+    SET is_msp_mandated = 0,
+        price_type = 'indicative_market',
+        price_value = 95000,
+        currency = 'INR',
+        unit = 'quintal',
+        marketing_season = 'Winter Crop 2026',
+        source_name = 'Local Mandi Spot Rate (Non-MSP Perishable Produce)',
+        source_url = NULL,
+        effective_date = '2026-11-01',
+        last_verified_at = '2026-11-19'
+    WHERE crop_name = 'Potato'
+  `).run();
 }
