@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     ZYVO Safe Demonstration Data Reset Utility
 .DESCRIPTION

@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Settings, Database, Mic, Cpu, Trash2, CheckCircle2, RefreshCw } from 'lucide-react';
+import { Settings, Database, Mic, Cpu, Trash2, CheckCircle2, RefreshCw, Globe, Shield } from 'lucide-react';
 
 export default function SettingsPage() {
   const [purging, setPurging] = useState(false);
   const [purgeSuccess, setPurgeSuccess] = useState(false);
 
   async function handlePurgeDemoData() {
-    if (!confirm('Are you sure you want to purge all demo transaction records and reset catalogs?')) {
+    if (!confirm('Are you sure you want to purge all demo transaction records and reset to baseline?')) {
       return;
     }
 
@@ -33,69 +33,93 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+          <div className="w-12 h-12 rounded-xs bg-[#202622] border border-[#69D9AD] flex items-center justify-center text-[#69D9AD]">
             <Settings className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-[#F1EADE]">Platform Diagnostics & Controls</h1>
-            <p className="text-xs text-[#8B9CB5] mt-1">
-              Configuration telemetry, database persistence, and demonstration administration
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-semibold text-[#F2EFE6]">
+                Platform Diagnostics & Telemetry
+              </h1>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-xs bg-[#202622] text-[#69D9AD] border border-[#46534A]">
+                OBSERVATORY
+              </span>
+            </div>
+            <p className="text-xs text-[#A4B0A6] mt-1 font-mono">
+              Configuration telemetry, database persistence, and pre-launch deployment controls
             </p>
           </div>
         </div>
 
-        <div className="px-3 py-1.5 rounded-lg bg-[#151415] border border-[#2A2C30] text-xs text-[#8B9CB5] font-mono">
-          Engine Version 2.0.0
+        <div className="px-3 py-1.5 rounded-xs bg-[#101211] border border-[#46534A] text-xs text-[#A4B0A6] font-mono">
+          ENGINE V3.0.0 · NODE:SQLITE
         </div>
       </div>
 
       {/* Engine Diagnostics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-3">
+        <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-3">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-emerald-400" />
-            <h3 className="text-sm font-semibold text-[#F1EADE]">Database Storage</h3>
+            <Database className="w-4 h-4 text-[#69D9AD]" />
+            <h3 className="text-sm font-semibold text-[#F2EFE6]">Database Storage</h3>
           </div>
           <div className="space-y-1.5 text-xs font-mono">
-            <div className="text-[#8B9CB5]">Driver: <span className="text-[#F1EADE]">node:sqlite (DatabaseSync)</span></div>
-            <div className="text-[#8B9CB5]">Storage: <span className="text-[#F1EADE]">zyvo.db (WAL Mode)</span></div>
-            <div className="text-[#8B9CB5]">Foreign Keys: <span className="text-emerald-400 font-semibold">ENFORCED (PRAGMA ON)</span></div>
+            <div className="text-[#A4B0A6]">Driver: <span className="text-[#F2EFE6]">node:sqlite (DatabaseSync)</span></div>
+            <div className="text-[#A4B0A6]">Storage: <span className="text-[#F2EFE6]">zyvo.db (WAL Mode)</span></div>
+            <div className="text-[#A4B0A6]">Foreign Keys: <span className="text-[#A4E4B5] font-semibold">ENFORCED (PRAGMA ON)</span></div>
           </div>
         </div>
 
-        <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-3">
+        <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-3">
           <div className="flex items-center gap-2">
-            <Mic className="w-4 h-4 text-amber-400" />
-            <h3 className="text-sm font-semibold text-[#F1EADE]">Speech-to-Text Pipeline</h3>
+            <Mic className="w-4 h-4 text-[#DAB77A]" />
+            <h3 className="text-sm font-semibold text-[#F2EFE6]">Speech Pipeline Router</h3>
           </div>
           <div className="space-y-1.5 text-xs font-mono">
-            <div className="text-[#8B9CB5]">Provider: <span className="text-[#F1EADE]">Sarvam Saaras v4</span></div>
-            <div className="text-[#8B9CB5]">Fallback: <span className="text-emerald-400">Benchmark Evaluator</span></div>
-            <div className="text-[#8B9CB5]">Languages: <span className="text-[#F1EADE]">Hindi, Hinglish, English</span></div>
+            <div className="text-[#A4B0A6]">Provider Router: <span className="text-[#F2EFE6]">Decoupled Provider Registry</span></div>
+            <div className="text-[#A4B0A6]">External API: <span className="text-[#69D9AD]">EXTERNAL_API_ENABLED=false</span></div>
+            <div className="text-[#A4B0A6]">Dialects: <span className="text-[#F2EFE6]">Hindi, Hinglish, English</span></div>
           </div>
         </div>
 
-        <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-3">
+        <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-3">
           <div className="flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-blue-400" />
-            <h3 className="text-sm font-semibold text-[#F1EADE]">Slot Extraction Engine</h3>
+            <Cpu className="w-4 h-4 text-[#86D5D4]" />
+            <h3 className="text-sm font-semibold text-[#F2EFE6]">Structured Intent Extraction</h3>
           </div>
           <div className="space-y-1.5 text-xs font-mono">
-            <div className="text-[#8B9CB5]">Schema LLM: <span className="text-[#F1EADE]">Gemini 3.5 Flash-Lite</span></div>
-            <div className="text-[#8B9CB5]">Deterministic: <span className="text-emerald-400 font-semibold">Bounded Regex Parser</span></div>
-            <div className="text-[#8B9CB5]">Financials: <span className="text-amber-400">Integer Paise (₹1 = 100p)</span></div>
+            <div className="text-[#A4B0A6]">Deterministic: <span className="text-[#69D9AD] font-semibold">Bounded Regex Parser</span></div>
+            <div className="text-[#A4B0A6]">Financial Engine: <span className="text-[#DAB77A]">Strict Integer Paise</span></div>
+            <div className="text-[#A4B0A6]">Confirmation: <span className="text-[#86D5D4]">Two-Phase Commit Gate</span></div>
           </div>
         </div>
       </div>
 
+      {/* Pre-launch Deployment & Domain Architecture Card */}
+      <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 sm:p-6 space-y-3">
+        <div className="flex items-center gap-2">
+          <Globe className="w-4 h-4 text-[#86D5D4]" />
+          <h3 className="text-sm font-semibold text-[#F2EFE6]">Production Launch Prerequisites</h3>
+        </div>
+        <p className="text-xs text-[#C3CBC3] leading-relaxed">
+          The following operational items are documented as pre-launch requirements prior to public production deployment:
+        </p>
+        <ul className="text-xs text-[#A4B0A6] space-y-1.5 font-mono list-disc list-inside">
+          <li>Custom Domain DNS Binding: Point CNAME / A records to host environment (e.g. app.zyvo.in).</li>
+          <li>TLS / SSL Certificate Termination: Managed via Cloudflare or Let's Encrypt automated certificate lifecycle.</li>
+          <li>Production Environment Secrets: Populate production credentials in self-hosted vault when activating live external API mode.</li>
+          <li>Legal Counsel Sign-off: Complete corporate entity incorporation and formalize terms of service.</li>
+        </ul>
+      </div>
+
       {/* Operator Data Purge Card */}
-      <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-6 space-y-4">
+      <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 sm:p-6 space-y-4">
         <div>
-          <h3 className="text-sm font-semibold text-[#F1EADE]">Purge Demo Transaction Ledger</h3>
-          <p className="text-xs text-[#8B9CB5] mt-1 leading-relaxed">
-            Resets all temporary voice submissions, delivery calendar adjustments, grocery orders, vegetable baskets, clinic appointments, and agri procurement entries back to the clean baseline. Seed users, workspaces, and master product catalogs are safely preserved.
+          <h3 className="text-sm font-semibold text-[#F2EFE6]">Purge Demo Transaction Ledger</h3>
+          <p className="text-xs text-[#A4B0A6] mt-1 leading-relaxed">
+            Resets all temporary voice submissions, delivery calendar adjustments, grocery orders, vegetable baskets, clinic appointments, and agri procurement entries back to clean seed baseline. Seed users, workspaces, and master product catalogs are safely preserved with foreign-key cascade protection.
           </p>
         </div>
 
@@ -103,7 +127,7 @@ export default function SettingsPage() {
           <button
             onClick={handlePurgeDemoData}
             disabled={purging}
-            className="px-4 py-2 bg-red-950/60 hover:bg-red-900/80 border border-red-800 text-red-200 rounded-lg text-xs font-medium transition flex items-center gap-2 disabled:opacity-50"
+            className="min-h-[44px] px-4 py-2 bg-[#202622] hover:bg-[#2A322D] border border-[#F1A79C] text-[#F1A79C] rounded-xs text-xs font-semibold transition flex items-center gap-2 disabled:opacity-50"
           >
             {purging ? (
               <>
@@ -119,7 +143,7 @@ export default function SettingsPage() {
           </button>
 
           {purgeSuccess && (
-            <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
+            <div className="flex items-center gap-1.5 text-xs text-[#A4E4B5] font-mono">
               <CheckCircle2 className="w-4 h-4" />
               <span>Database baseline restored successfully</span>
             </div>

@@ -10,19 +10,19 @@ export function ModuleStatusBadge({ status, label, size = 'sm' }: ModuleStatusBa
   const isReference = status === 'active_reference' || status === 'active';
   const displayLabel = label || (isReference ? 'Active Workflow' : 'Foundation Ready');
 
-  const textClass = size === 'sm' ? 'text-xs px-2.5 py-1' : 'text-sm px-3 py-1.5';
+  const textClass = size === 'sm' ? 'text-[11px] px-2 py-0.5' : 'text-xs px-2.5 py-1';
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-medium rounded-md border ${textClass} ${
+      className={`inline-flex items-center gap-1.5 font-medium rounded-xs border font-mono ${textClass} ${
         isReference
-          ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60'
-          : 'bg-amber-950/30 text-amber-300/90 border-amber-800/40'
+          ? 'bg-[#202622] text-[#69D9AD] border-[#46534A]'
+          : 'bg-[#202622] text-[#DAB77A] border-[#46534A]'
       }`}
     >
       <span
-        className={`w-1.5 h-1.5 rounded-full ${
-          isReference ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
+        className={`w-1.5 h-1.5 rounded-xs ${
+          isReference ? 'bg-[#69D9AD]' : 'bg-[#DAB77A]'
         }`}
       />
       {displayLabel}

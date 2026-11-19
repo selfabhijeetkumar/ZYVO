@@ -1,16 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --canvas: #151415;
-  --surface: #1B1C1E;
-  --surface-raised: #242528;
-  --border: #2A2C30;
-  --border-focus: #45474E;
-  --text-primary: #F1EADE;
-  --text-muted: #8B9CB5;
-  --accent-emerald: #10B981;
-  --accent-amber: #F59E0B;
-  --accent-crimson: #EF4444;
+  --canvas: #101211;
+  --surface-recessed: #171B19;
+  --surface-raised: #202622;
+  --surface-active: #2A322D;
+  --border-subtle: #2C3530;
+  --border-strong: #46534A;
+  --text-primary: #F2EFE6;
+  --text-secondary: #C3CBC3;
+  --text-muted: #A4B0A6;
+  --accent-emerald: #69D9AD;
+  --accent-deep-emerald: #24765E;
+  --accent-teal: #86D5D4;
+  --accent-amber: #DAB77A;
+  --state-error: #F1A79C;
+  --state-success: #A4E4B5;
 }
 
 body {
@@ -20,25 +25,38 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* Custom scrollbars for Obsidian theme */
+/* Tabular figures for numerical precision */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Custom scrollbars for Operational Observatory */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #151415;
+  background: var(--canvas);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2A2C30;
-  border-radius: 3px;
+  background: var(--border-subtle);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #45474E;
+  background: var(--border-strong);
+}
+
+/* Focus visibility outline for WCAG AA compliance */
+*:focus-visible {
+  outline: 2px solid var(--accent-emerald);
+  outline-offset: 2px;
 }
 
 /* Accessibility: Respect prefers-reduced-motion */
@@ -51,7 +69,7 @@ body {
   }
 }
 
-/* Ensure smooth touch interactions on mobile devices */
+/* Ensure smooth touch interactions on mobile devices with min 44px targets */
 button, a, input, select, textarea {
   touch-action: manipulation;
 }

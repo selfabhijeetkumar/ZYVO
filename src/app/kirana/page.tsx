@@ -4,19 +4,15 @@ import React, { useState, useEffect } from 'react';
 import {
   Store,
   ShoppingBag,
-  Languages,
   CheckCircle2,
   Package,
   Trash2,
   Plus,
-  Users,
-  Layers,
-  ArrowRight,
-  Clock,
   RefreshCw,
 } from 'lucide-react';
 import { ModuleStatusBadge } from '@/components/ModuleStatusBadge';
 import { VoiceActionCard } from '@/components/VoiceActionCard';
+import IndustryAccentScene from '@/components/spatial/IndustryAccentScene';
 
 export default function KiranaStorePage() {
   const [activeTab, setActiveTab] = useState<'customer' | 'vendor'>('customer');
@@ -180,53 +176,53 @@ export default function KiranaStorePage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header with Spatial Accent */}
+      <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-            <Store className="w-6 h-6" />
-          </div>
+          <IndustryAccentScene moduleType="kirana" accentColor="#DAB77A" />
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-[#F1EADE]">Kirana Store Operations</h1>
-              <ModuleStatusBadge status="active_reference" label="Phase 5 Complete Workflow" />
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-[#F2EFE6]">
+                Kirana Store Operations
+              </h1>
+              <ModuleStatusBadge status="active_reference" label="Phase 5 Workflow" />
             </div>
-            <p className="text-xs text-[#8B9CB5] mt-1">
-              Gupta Kirana & General Store · Multilingual grocery ordering, catalogue alias resolution, and order fulfillment
+            <p className="text-xs text-[#A4B0A6] mt-1 font-mono">
+              Gupta Kirana Store : Colloquial alias matching, integer paise billing, and fulfillment queue
             </p>
           </div>
         </div>
 
-        {/* Tab Controls */}
-        <div className="flex items-center bg-[#151415] border border-[#2A2C30] rounded-xl p-1">
+        {/* Tab Controls with min 44px targets */}
+        <div className="flex items-center bg-[#101211] border border-[#46534A] rounded-xs p-1">
           <button
             onClick={() => setActiveTab('customer')}
-            className={`px-4 py-2 text-xs font-medium rounded-lg transition flex items-center gap-2 ${
+            className={`min-h-[44px] px-4 py-2 text-xs font-medium rounded-xs transition flex items-center gap-2 ${
               activeTab === 'customer'
-                ? 'bg-[#242528] text-[#F1EADE] shadow-sm border border-[#2A2C30]'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#DAB77A]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />
+            <ShoppingBag className="w-3.5 h-3.5 text-[#DAB77A]" />
             <span>Customer Basket</span>
           </button>
           <button
             onClick={() => setActiveTab('vendor')}
-            className={`px-4 py-2 text-xs font-medium rounded-lg transition flex items-center gap-2 ${
+            className={`min-h-[44px] px-4 py-2 text-xs font-medium rounded-xs transition flex items-center gap-2 ${
               activeTab === 'vendor'
-                ? 'bg-[#242528] text-[#F1EADE] shadow-sm border border-[#2A2C30]'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#69D9AD]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <Package className="w-3.5 h-3.5 text-emerald-400" />
+            <Package className="w-3.5 h-3.5 text-[#69D9AD]" />
             <span>Vendor Orders</span>
           </button>
         </div>
       </div>
 
       {actionSuccess && (
-        <div className="p-3 bg-emerald-950/40 border border-emerald-800/60 rounded-xl text-xs text-emerald-300 flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div className="p-3 bg-[#202622] border border-[#A4E4B5] rounded-xs text-xs text-[#A4E4B5] flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-[#A4E4B5] shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
@@ -237,17 +233,17 @@ export default function KiranaStorePage() {
           {/* Active Basket Builder Card */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Basket Items List */}
-            <div className="lg:col-span-2 bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="lg:col-span-2 bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#2C3530]">
                 <div className="flex items-center gap-2">
-                  <ShoppingBag className="w-4 h-4 text-amber-400" />
-                  <h3 className="text-sm font-semibold text-[#F1EADE]">Current Grocery Basket</h3>
+                  <ShoppingBag className="w-4 h-4 text-[#DAB77A]" />
+                  <h3 className="text-sm font-semibold text-[#F2EFE6]">Active Grocery Basket</h3>
                 </div>
-                <span className="text-xs text-[#8B9CB5] font-mono">{basket.length} Items</span>
+                <span className="text-xs text-[#A4B0A6] font-mono tabular-nums">{basket.length} Items</span>
               </div>
 
               {basket.length === 0 ? (
-                <div className="p-8 text-center text-xs text-[#8B9CB5] border border-dashed border-[#2A2C30] rounded-lg">
+                <div className="p-8 text-center text-xs text-[#A4B0A6] border border-dashed border-[#46534A] rounded-xs">
                   Your grocery basket is empty. Add products from the catalogue below or submit a voice note.
                 </div>
               ) : (
@@ -255,30 +251,32 @@ export default function KiranaStorePage() {
                   {basket.map((item) => (
                     <div
                       key={item.catalogId}
-                      className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg flex items-center justify-between text-xs"
+                      className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs flex items-center justify-between text-xs"
                     >
                       <div>
-                        <div className="font-semibold text-[#F1EADE]">{item.name}</div>
-                        <div className="text-[11px] text-[#8B9CB5] font-mono">
+                        <div className="font-semibold text-[#F2EFE6]">{item.name}</div>
+                        <div className="text-[11px] text-[#A4B0A6] font-mono tabular-nums">
                           ₹{(item.pricePaise / 100).toFixed(2)} / {item.unit}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-4">
-                        {/* Quantity Controls */}
-                        <div className="flex items-center gap-2 bg-[#242528] px-2 py-1 rounded border border-[#2A2C30]">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        {/* Quantity Controls with accessible 44px touch targets */}
+                        <div className="flex items-center gap-2 bg-[#202622] px-2 py-1 rounded-xs border border-[#46534A]">
                           <button
                             onClick={() => updateQuantity(item.catalogId, -0.5)}
-                            className="text-[#8B9CB5] hover:text-[#F1EADE] font-bold px-1"
+                            className="min-w-[28px] min-h-[28px] text-[#A4B0A6] hover:text-[#F2EFE6] font-bold px-1"
+                            aria-label={`Decrease ${item.name} quantity`}
                           >
                             -
                           </button>
-                          <span className="font-mono text-[#F1EADE] font-semibold">
+                          <span className="font-mono text-[#F2EFE6] font-semibold tabular-nums">
                             {item.quantity} {item.unit}
                           </span>
                           <button
                             onClick={() => updateQuantity(item.catalogId, 0.5)}
-                            className="text-[#8B9CB5] hover:text-[#F1EADE] font-bold px-1"
+                            className="min-w-[28px] min-h-[28px] text-[#A4B0A6] hover:text-[#F2EFE6] font-bold px-1"
+                            aria-label={`Increase ${item.name} quantity`}
                           >
                             +
                           </button>
@@ -286,15 +284,16 @@ export default function KiranaStorePage() {
 
                         {/* Item Subtotal */}
                         <div className="text-right min-w-[70px]">
-                          <div className="font-bold text-emerald-400 font-mono">
+                          <div className="font-bold text-[#69D9AD] font-mono tabular-nums">
                             ₹{((item.pricePaise * item.quantity) / 100).toFixed(2)}
                           </div>
                         </div>
 
                         <button
                           onClick={() => removeItemFromBasket(item.catalogId)}
-                          className="text-[#8B9CB5] hover:text-red-400 p-1"
+                          className="min-w-[32px] min-h-[32px] flex items-center justify-center text-[#A4B0A6] hover:text-[#F1A79C] p-1"
                           title="Remove item"
+                          aria-label={`Remove ${item.name}`}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -306,25 +305,25 @@ export default function KiranaStorePage() {
             </div>
 
             {/* Subtotal & Confirmation Card */}
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 flex flex-col justify-between space-y-4">
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 flex flex-col justify-between space-y-4">
               <div className="space-y-3">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-[#8B9CB5]">
-                  Order Subtotal
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-[#A4B0A6] font-mono">
+                  Order Ledger Subtotal
                 </h3>
-                <div className="text-3xl font-bold text-amber-400 font-mono">
+                <div className="text-3xl font-bold text-[#DAB77A] font-mono tabular-nums">
                   ₹{(totalBasketPaise / 100).toFixed(2)}
                 </div>
-                <div className="text-xs text-[#8B9CB5] space-y-1 font-mono pt-2 border-t border-[#2A2C30]">
-                  <div>Items: {basket.length}</div>
-                  <div>Delivery: Doorstep Free Drop</div>
-                  <div>Payment: Pay on Delivery</div>
+                <div className="text-xs text-[#A4B0A6] space-y-1 font-mono pt-2 border-t border-[#2C3530]">
+                  <div>Items Selected: {basket.length}</div>
+                  <div>Delivery: Free Ground Drop</div>
+                  <div>Settlement: Pay on Delivery</div>
                 </div>
               </div>
 
               <button
                 onClick={handleConfirmBasketOrder}
                 disabled={loading || basket.length === 0}
-                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium transition flex items-center justify-center gap-2 disabled:opacity-50"
+                className="min-h-[44px] w-full py-2.5 bg-[#69D9AD] hover:bg-[#86D5D4] text-[#101211] rounded-xs text-xs font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Confirm Grocery Order</span>
@@ -334,7 +333,9 @@ export default function KiranaStorePage() {
 
           {/* Voice Action Card */}
           <div className="space-y-2">
-            <h2 className="text-sm font-semibold text-[#F1EADE]">Test Voice Grocery Order</h2>
+            <h2 className="text-xs font-semibold text-[#F2EFE6] uppercase font-mono tracking-wider">
+              Voice Grocery Dispatch
+            </h2>
             <VoiceActionCard
               verticalType="kirana"
               workspaceId="ws_kirana_01"
@@ -343,29 +344,32 @@ export default function KiranaStorePage() {
             />
           </div>
 
-          {/* Product Catalog Grid to Add Items */}
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-            <h3 className="text-sm font-semibold text-[#F1EADE]">Stocked Catalogue (Click + to Add)</h3>
+          {/* Product Catalog Grid */}
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-[#F2EFE6]">
+              Store Inventory (Click + to Add to Basket)
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {catalog.map((prod) => (
                 <div
                   key={prod.id}
-                  className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg flex items-center justify-between"
+                  className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs flex items-center justify-between"
                 >
                   <div>
-                    <div className="text-xs font-semibold text-[#F1EADE]">{prod.name}</div>
-                    <div className="text-[11px] text-[#8B9CB5]">{prod.category}</div>
-                    <div className="text-xs font-bold text-emerald-400 font-mono mt-1">
+                    <div className="text-xs font-semibold text-[#F2EFE6]">{prod.name}</div>
+                    <div className="text-[11px] text-[#A4B0A6]">{prod.category}</div>
+                    <div className="text-xs font-bold text-[#69D9AD] font-mono tabular-nums mt-1">
                       ₹{(prod.unit_price_paise / 100).toFixed(2)} / {prod.unit}
                     </div>
                   </div>
 
                   <button
                     onClick={() => addItemToBasket(prod)}
-                    className="p-2 bg-[#242528] hover:bg-[#2A2C30] text-[#F1EADE] rounded-lg border border-[#2A2C30]"
-                    title="Add to basket"
+                    className="min-w-[44px] min-h-[44px] p-2 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] rounded-xs border border-[#46534A] flex items-center justify-center"
+                    title={`Add ${prod.name} to basket`}
+                    aria-label={`Add ${prod.name} to basket`}
                   >
-                    <Plus className="w-4 h-4 text-emerald-400" />
+                    <Plus className="w-4 h-4 text-[#69D9AD]" />
                   </button>
                 </div>
               ))}
@@ -377,17 +381,17 @@ export default function KiranaStorePage() {
       {/* VENDOR ORDERS VIEW */}
       {activeTab === 'vendor' && (
         <div className="space-y-6">
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#2C3530]">
               <div>
-                <h3 className="text-sm font-semibold text-[#F1EADE]">Incoming Customer Grocery Orders</h3>
-                <p className="text-xs text-[#8B9CB5] mt-0.5">
-                  Real-time store run-list with item bagging and fulfillment workflow
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">Store Order Fulfillment Queue</h3>
+                <p className="text-xs text-[#A4B0A6] mt-0.5 font-mono">
+                  Live packing and dispatch queue : Status transitions CONFIRMED to PACKED to FULFILLED
                 </p>
               </div>
               <button
                 onClick={loadData}
-                className="px-3 py-1.5 bg-[#242528] text-[#8B9CB5] hover:text-[#F1EADE] rounded-lg text-xs flex items-center gap-1.5"
+                className="min-h-[44px] px-3.5 py-1.5 bg-[#202622] text-[#A4B0A6] hover:text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs flex items-center gap-1.5"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Refresh</span>
@@ -395,7 +399,7 @@ export default function KiranaStorePage() {
             </div>
 
             {orders.length === 0 ? (
-              <div className="p-8 text-center text-xs text-[#8B9CB5] border border-dashed border-[#2A2C30] rounded-lg">
+              <div className="p-8 text-center text-xs text-[#A4B0A6] border border-dashed border-[#46534A] rounded-xs">
                 No orders placed yet. Place an order via voice or customer basket above.
               </div>
             ) : (
@@ -403,52 +407,54 @@ export default function KiranaStorePage() {
                 {orders.map((ord) => (
                   <div
                     key={ord.id}
-                    className="p-4 bg-[#151415] border border-[#2A2C30] rounded-xl space-y-3"
+                    className="p-4 bg-[#101211] border border-[#2C3530] rounded-xs space-y-3"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2A2C30] pb-2.5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2C3530] pb-2.5">
                       <div>
-                        <span className="text-xs font-bold text-[#F1EADE]">{ord.id}</span>
-                        <span className="text-xs text-[#8B9CB5] ml-2">
-                          · {ord.customer_name} ({ord.customer_phone})
+                        <span className="text-xs font-bold text-[#F2EFE6]">{ord.id}</span>
+                        <span className="text-xs text-[#A4B0A6] ml-2">
+                          : {ord.customer_name} ({ord.customer_phone})
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <span
-                          className={`px-2.5 py-0.5 rounded text-[10px] font-semibold ${
+                          className={`px-2 py-0.5 rounded-xs text-[10px] font-semibold ${
                             ord.order_status === 'FULFILLED'
-                              ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-800'
+                              ? 'bg-[#202622] text-[#A4E4B5] border border-[#A4E4B5]'
                               : ord.order_status === 'PACKED'
-                              ? 'bg-blue-950/60 text-blue-300 border border-blue-800'
-                              : 'bg-amber-950/60 text-amber-300 border border-amber-800'
+                              ? 'bg-[#202622] text-[#86D5D4] border border-[#86D5D4]'
+                              : 'bg-[#202622] text-[#DAB77A] border border-[#DAB77A]'
                           }`}
                         >
                           {ord.order_status}
                         </span>
-                        <span className="text-xs font-bold text-emerald-400">
+                        <span className="text-xs font-bold text-[#69D9AD] tabular-nums">
                           ₹{(ord.total_amount_paise / 100).toFixed(2)}
                         </span>
                       </div>
                     </div>
 
                     {/* Order Line Items */}
-                    <div className="text-xs text-[#8B9CB5] space-y-1">
+                    <div className="text-xs text-[#A4B0A6] space-y-1">
                       {ord.items?.map((it: any) => (
                         <div key={it.id} className="flex justify-between">
                           <span>
                             • {it.item_name || it.requested_item_name} ({it.quantity} {it.unit})
                           </span>
-                          <span className="text-[#F1EADE]">₹{(it.subtotal_paise / 100).toFixed(2)}</span>
+                          <span className="text-[#F2EFE6] tabular-nums">
+                            ₹{(it.subtotal_paise / 100).toFixed(2)}
+                          </span>
                         </div>
                       ))}
                     </div>
 
                     {/* Action buttons */}
-                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#2A2C30]/50 text-xs font-sans">
+                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#2C3530] text-xs font-sans">
                       {ord.order_status === 'CONFIRMED' && (
                         <button
                           onClick={() => handleUpdateOrderStatus(ord.id, 'PACKED')}
-                          className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[11px] font-medium transition"
+                          className="min-h-[44px] px-3.5 py-1.5 bg-[#202622] hover:bg-[#2A322D] text-[#86D5D4] border border-[#86D5D4] rounded-xs text-xs font-medium transition"
                         >
                           Mark as Packed
                         </button>
@@ -456,7 +462,7 @@ export default function KiranaStorePage() {
                       {ord.order_status === 'PACKED' && (
                         <button
                           onClick={() => handleUpdateOrderStatus(ord.id, 'FULFILLED')}
-                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[11px] font-medium transition"
+                          className="min-h-[44px] px-3.5 py-1.5 bg-[#69D9AD] hover:bg-[#86D5D4] text-[#101211] rounded-xs text-xs font-semibold transition"
                         >
                           Mark Fulfilled & Delivered
                         </button>
@@ -464,7 +470,7 @@ export default function KiranaStorePage() {
                       {ord.order_status !== 'CANCELLED' && ord.order_status !== 'FULFILLED' && (
                         <button
                           onClick={() => handleUpdateOrderStatus(ord.id, 'CANCELLED')}
-                          className="px-3 py-1.5 bg-[#242528] text-red-300 hover:text-red-200 rounded-lg text-[11px] font-medium transition"
+                          className="min-h-[44px] px-3 py-1.5 bg-[#202622] text-[#F1A79C] hover:text-[#F2EFE6] border border-[#F1A79C] rounded-xs text-xs font-medium transition"
                         >
                           Cancel Order
                         </button>

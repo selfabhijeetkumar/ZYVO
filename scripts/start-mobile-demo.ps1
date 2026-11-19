@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     ZYVO Mobile HTTPS Demo Starter Script (Cloudflare Quick Tunnel)
 .DESCRIPTION

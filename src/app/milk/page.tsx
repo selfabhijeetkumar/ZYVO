@@ -6,7 +6,6 @@ import {
   Clock,
   Calendar as CalendarIcon,
   CheckCircle2,
-  AlertCircle,
   Truck,
   Users,
   Coins,
@@ -14,13 +13,10 @@ import {
   Play,
   Plus,
   Edit2,
-  RefreshCw,
-  FileText,
-  Shield,
-  ArrowRight,
 } from 'lucide-react';
 import { ModuleStatusBadge } from '@/components/ModuleStatusBadge';
 import { VoiceActionCard } from '@/components/VoiceActionCard';
+import IndustryAccentScene from '@/components/spatial/IndustryAccentScene';
 
 export default function MilkDeliveryPage() {
   const [activeTab, setActiveTab] = useState<'customer' | 'vendor'>('customer');
@@ -49,28 +45,24 @@ export default function MilkDeliveryPage() {
   async function loadData() {
     setLoading(true);
     try {
-      // 1. Subscription
       const subRes = await fetch('/api/milk/subscription?workspaceId=ws_milk_01');
       if (subRes.ok) {
         const d = await subRes.json();
         setSubscription(d.subscription);
       }
 
-      // 2. Bill preview
       const billRes = await fetch('/api/milk/bill-preview?workspaceId=ws_milk_01&yearMonth=2026-11');
       if (billRes.ok) {
         const d = await billRes.json();
         setBill(d.bill);
       }
 
-      // 3. Calendar
       const calRes = await fetch('/api/milk/calendar?workspaceId=ws_milk_01&startDate=2026-11-15&endDate=2026-11-30');
       if (calRes.ok) {
         const d = await calRes.json();
         setCalendar(d.calendar || []);
       }
 
-      // 4. Manifest
       const manRes = await fetch(`/api/milk/manifest?workspaceId=ws_milk_01&date=${manifestDate}`);
       if (manRes.ok) {
         const d = await manRes.json();
@@ -87,7 +79,7 @@ export default function MilkDeliveryPage() {
     setLoading(true);
     setActionSuccess(null);
     try {
-      let payload: any = {
+      const payload: any = {
         action: actionType,
         workspaceId: 'ws_milk_01',
         customerId: 'user_customer_01',
@@ -107,7 +99,6 @@ export default function MilkDeliveryPage() {
         payload.isPermanent = true;
       }
 
-      // Submit via proposal or direct API confirmation
       const res = await fetch('/api/voice-submissions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -127,7 +118,6 @@ export default function MilkDeliveryPage() {
 
       const data = await res.json();
       if (data.submission?.id) {
-        // Auto confirm for deterministic quick action controls
         const confirmRes = await fetch(`/api/proposals/${data.submission.id}/confirm`, {
           method: 'POST',
         });
@@ -170,53 +160,53 @@ export default function MilkDeliveryPage() {
 
   return (
     <div className="space-y-6">
-      {/* Module Header */}
-      <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Module Header with Spatial Accent */}
+      <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-            <Milk className="w-6 h-6" />
-          </div>
+          <IndustryAccentScene moduleType="milk" accentColor="#86D5D4" />
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-[#F1EADE]">Milk Delivery Operations</h1>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-[#F2EFE6]">
+                Milk Delivery Operations
+              </h1>
               <ModuleStatusBadge status="active_reference" />
             </div>
-            <p className="text-xs text-[#8B9CB5] mt-1">
-              Kumar Dairy Milk Booth · Doorstep delivery lifecycle, billing engine, and route manifests
+            <p className="text-xs text-[#A4B0A6] mt-1 font-mono">
+              Kumar Dairy Booth : Recurring doorstep delivery, 20:00 cutoff engine, and billing ledger
             </p>
           </div>
         </div>
 
-        {/* View Switcher Tabs */}
-        <div className="flex items-center bg-[#151415] border border-[#2A2C30] rounded-xl p-1">
+        {/* View Switcher Tabs with min 44px targets */}
+        <div className="flex items-center bg-[#101211] border border-[#46534A] rounded-xs p-1">
           <button
             onClick={() => setActiveTab('customer')}
-            className={`px-4 py-2 text-xs font-medium rounded-lg transition flex items-center gap-2 ${
+            className={`min-h-[44px] px-4 py-2 text-xs font-medium rounded-xs transition flex items-center gap-2 ${
               activeTab === 'customer'
-                ? 'bg-[#242528] text-[#F1EADE] shadow-sm border border-[#2A2C30]'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#86D5D4]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <Users className="w-3.5 h-3.5 text-emerald-400" />
+            <Users className="w-3.5 h-3.5 text-[#86D5D4]" />
             <span>Customer View</span>
           </button>
           <button
             onClick={() => setActiveTab('vendor')}
-            className={`px-4 py-2 text-xs font-medium rounded-lg transition flex items-center gap-2 ${
+            className={`min-h-[44px] px-4 py-2 text-xs font-medium rounded-xs transition flex items-center gap-2 ${
               activeTab === 'vendor'
-                ? 'bg-[#242528] text-[#F1EADE] shadow-sm border border-[#2A2C30]'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#DAB77A]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <Truck className="w-3.5 h-3.5 text-amber-400" />
-            <span>Vendor Manifest View</span>
+            <Truck className="w-3.5 h-3.5 text-[#DAB77A]" />
+            <span>Vendor Route Manifest</span>
           </button>
         </div>
       </div>
 
       {actionSuccess && (
-        <div className="p-3 bg-emerald-950/40 border border-emerald-800/60 rounded-xl text-xs text-emerald-300 flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div className="p-3 bg-[#202622] border border-[#A4E4B5] rounded-xs text-xs text-[#A4E4B5] flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-[#A4E4B5] shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
@@ -226,90 +216,92 @@ export default function MilkDeliveryPage() {
         <div className="space-y-6">
           {/* Top Metric Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-2">
-              <div className="text-xs text-[#8B9CB5] font-medium">Daily Subscription</div>
-              <div className="text-lg font-bold text-[#F1EADE]">
-                {subscription?.product_name || 'Cow Milk'}
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-2">
+              <div className="text-xs text-[#A4B0A6] font-medium uppercase font-mono">
+                Daily Base Subscription
               </div>
-              <div className="text-xs text-[#8B9CB5] font-mono">
-                Base Quantity: <span className="text-[#F1EADE] font-semibold">{subscription?.base_quantity_ml || 1000} ml/day</span>
+              <div className="text-xl font-bold text-[#F2EFE6]">
+                {subscription?.product_name || 'Standard Cow Milk'}
               </div>
-              <div className="text-xs text-emerald-400 font-mono">
-                Rate: ₹{((subscription?.unit_rate_paise || 7000) / 100).toFixed(2)}/L
+              <div className="text-xs text-[#A4B0A6] font-mono tabular-nums">
+                Base Quantity: <span className="text-[#F2EFE6] font-semibold">{subscription?.base_quantity_ml || 1000} ml/day</span>
+              </div>
+              <div className="text-xs text-[#86D5D4] font-mono tabular-nums">
+                Contract Rate: ₹{((subscription?.unit_rate_paise || 7000) / 100).toFixed(2)}/L
               </div>
             </div>
 
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-2">
-              <div className="text-xs text-[#8B9CB5] font-medium flex items-center justify-between">
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-2">
+              <div className="text-xs text-[#A4B0A6] font-medium flex items-center justify-between uppercase font-mono">
                 <span>Month Bill Preview (Nov 2026)</span>
-                <Coins className="w-3.5 h-3.5 text-amber-400" />
+                <Coins className="w-3.5 h-3.5 text-[#DAB77A]" />
               </div>
-              <div className="text-2xl font-bold text-amber-400 font-mono">
+              <div className="text-2xl font-bold text-[#DAB77A] font-mono tabular-nums">
                 ₹{bill ? (bill.totalBillPaise / 100).toFixed(2) : '1,995.00'}
               </div>
-              <div className="text-[11px] text-[#8B9CB5] space-y-0.5 font-mono">
+              <div className="text-[11px] text-[#A4B0A6] space-y-0.5 font-mono tabular-nums">
                 <div>Base 30 Days: ₹{bill ? (bill.baseContractAmountPaise / 100).toFixed(2) : '2,100.00'}</div>
-                <div className="text-emerald-400">
-                  - Pause Savings: ₹{bill ? (bill.pausedCreditDeductionPaise / 100).toFixed(2) : '140.00'} ({bill?.pausedDays || 2} days)
+                <div className="text-[#A4E4B5]">
+                  - Pause Deduction: ₹{bill ? (bill.pausedCreditDeductionPaise / 100).toFixed(2) : '140.00'} ({bill?.pausedDays || 2} days)
                 </div>
-                <div className="text-amber-400">
-                  + Extra Milk: ₹{bill ? (bill.extraDeliveriesAmountPaise / 100).toFixed(2) : '35.00'} ({bill?.extraDeliveryDays || 1} day)
+                <div className="text-[#DAB77A]">
+                  + Extra Deliveries: ₹{bill ? (bill.extraDeliveriesAmountPaise / 100).toFixed(2) : '35.00'} ({bill?.extraDeliveryDays || 1} day)
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-2">
-              <div className="text-xs text-[#8B9CB5] font-medium flex items-center justify-between">
-                <span>Daily Next-Day Cutoff</span>
-                <Clock className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-2">
+              <div className="text-xs text-[#A4B0A6] font-medium flex items-center justify-between uppercase font-mono">
+                <span>Operational Cutoff Policy</span>
+                <Clock className="w-3.5 h-3.5 text-[#69D9AD]" />
               </div>
-              <div className="text-lg font-bold text-[#F1EADE] font-mono">20:00:00 IST</div>
-              <p className="text-xs text-[#8B9CB5] leading-relaxed">
-                Changes submitted before 8:00 PM take effect tomorrow morning. Requests after 8:00 PM take effect on Day+2.
+              <div className="text-xl font-bold text-[#F2EFE6] font-mono tabular-nums">20:00:00 IST</div>
+              <p className="text-xs text-[#C3CBC3] leading-relaxed">
+                Requests before 8:00 PM take effect tomorrow morning. Requests submitted after 8:00 PM are locked to Day D+2 per dairy depot indenting rules.
               </p>
             </div>
           </div>
 
-          {/* Quick Action Buttons */}
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#8B9CB5]">
-              Quick Action Controls
+          {/* Quick Action Controls */}
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#A4B0A6] font-mono">
+              Quick Action Schedule Modifications
             </h3>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2.5">
               <button
                 onClick={() => setShowQuickAction('PAUSE')}
-                className="px-3.5 py-2 bg-[#242528] hover:bg-[#2A2C30] text-[#F1EADE] rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-[#2A2C30]"
+                className="min-h-[44px] px-3.5 py-2 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] rounded-xs text-xs font-medium transition flex items-center gap-2 border border-[#46534A]"
               >
-                <Pause className="w-3.5 h-3.5 text-amber-400" />
+                <Pause className="w-3.5 h-3.5 text-[#DAB77A]" />
                 <span>Pause Delivery</span>
               </button>
               <button
                 onClick={() => setShowQuickAction('RESUME')}
-                className="px-3.5 py-2 bg-[#242528] hover:bg-[#2A2C30] text-[#F1EADE] rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-[#2A2C30]"
+                className="min-h-[44px] px-3.5 py-2 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] rounded-xs text-xs font-medium transition flex items-center gap-2 border border-[#46534A]"
               >
-                <Play className="w-3.5 h-3.5 text-emerald-400" />
+                <Play className="w-3.5 h-3.5 text-[#69D9AD]" />
                 <span>Resume Delivery</span>
               </button>
               <button
                 onClick={() => setShowQuickAction('EXTRA')}
-                className="px-3.5 py-2 bg-[#242528] hover:bg-[#2A2C30] text-[#F1EADE] rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-[#2A2C30]"
+                className="min-h-[44px] px-3.5 py-2 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] rounded-xs text-xs font-medium transition flex items-center gap-2 border border-[#46534A]"
               >
-                <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                <Plus className="w-3.5 h-3.5 text-[#86D5D4]" />
                 <span>Add Extra Milk</span>
               </button>
               <button
                 onClick={() => setShowQuickAction('CHANGE_BASE')}
-                className="px-3.5 py-2 bg-[#242528] hover:bg-[#2A2C30] text-[#F1EADE] rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-[#2A2C30]"
+                className="min-h-[44px] px-3.5 py-2 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] rounded-xs text-xs font-medium transition flex items-center gap-2 border border-[#46534A]"
               >
-                <Edit2 className="w-3.5 h-3.5 text-blue-400" />
-                <span>Change Daily Base Quantity</span>
+                <Edit2 className="w-3.5 h-3.5 text-[#A4B0A6]" />
+                <span>Change Base Quantity</span>
               </button>
             </div>
 
             {/* Quick Action Form Modal/Inliner */}
             {showQuickAction && (
-              <div className="pt-4 border-t border-[#2A2C30] space-y-3 bg-[#151415] p-4 rounded-lg">
-                <div className="text-xs font-semibold text-[#F1EADE]">
+              <div className="pt-4 border-t border-[#2C3530] space-y-3 bg-[#101211] p-4 rounded-xs border border-[#46534A]">
+                <div className="text-xs font-semibold text-[#F2EFE6]">
                   {showQuickAction === 'PAUSE' && 'Pause Delivery (Date Range)'}
                   {showQuickAction === 'RESUME' && 'Resume Subscription'}
                   {showQuickAction === 'EXTRA' && 'Add Extra Milk for Target Date'}
@@ -318,49 +310,49 @@ export default function MilkDeliveryPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[11px] text-[#8B9CB5]">Start / Target Date:</label>
+                    <label className="text-[11px] text-[#A4B0A6]">Start / Target Date:</label>
                     <input
                       type="date"
                       value={actionForm.startDate}
                       onChange={(e) => setActionForm({ ...actionForm, startDate: e.target.value })}
-                      className="w-full mt-1 bg-[#1B1C1E] border border-[#2A2C30] rounded-lg p-2 text-xs text-[#F1EADE]"
+                      className="w-full mt-1 bg-[#171B19] border border-[#46534A] rounded-xs p-2 text-xs text-[#F2EFE6]"
                     />
                   </div>
 
                   {showQuickAction === 'PAUSE' && (
                     <div>
-                      <label className="text-[11px] text-[#8B9CB5]">End Date (Inclusive):</label>
+                      <label className="text-[11px] text-[#A4B0A6]">End Date (Inclusive):</label>
                       <input
                         type="date"
                         value={actionForm.endDate}
                         onChange={(e) => setActionForm({ ...actionForm, endDate: e.target.value })}
-                        className="w-full mt-1 bg-[#1B1C1E] border border-[#2A2C30] rounded-lg p-2 text-xs text-[#F1EADE]"
+                        className="w-full mt-1 bg-[#171B19] border border-[#46534A] rounded-xs p-2 text-xs text-[#F2EFE6]"
                       />
                     </div>
                   )}
 
                   {showQuickAction === 'EXTRA' && (
                     <div>
-                      <label className="text-[11px] text-[#8B9CB5]">Extra Quantity (ml):</label>
+                      <label className="text-[11px] text-[#A4B0A6]">Extra Quantity (ml):</label>
                       <input
                         type="number"
                         value={actionForm.extraMl}
                         step={250}
                         onChange={(e) => setActionForm({ ...actionForm, extraMl: Number(e.target.value) })}
-                        className="w-full mt-1 bg-[#1B1C1E] border border-[#2A2C30] rounded-lg p-2 text-xs text-[#F1EADE]"
+                        className="w-full mt-1 bg-[#171B19] border border-[#46534A] rounded-xs p-2 text-xs text-[#F2EFE6]"
                       />
                     </div>
                   )}
 
                   {showQuickAction === 'CHANGE_BASE' && (
                     <div>
-                      <label className="text-[11px] text-[#8B9CB5]">New Daily Base Quantity (ml):</label>
+                      <label className="text-[11px] text-[#A4B0A6]">New Daily Base Quantity (ml):</label>
                       <input
                         type="number"
                         value={actionForm.newBaseQty}
                         step={250}
                         onChange={(e) => setActionForm({ ...actionForm, newBaseQty: Number(e.target.value) })}
-                        className="w-full mt-1 bg-[#1B1C1E] border border-[#2A2C30] rounded-lg p-2 text-xs text-[#F1EADE]"
+                        className="w-full mt-1 bg-[#171B19] border border-[#46534A] rounded-xs p-2 text-xs text-[#F2EFE6]"
                       />
                     </div>
                   )}
@@ -375,13 +367,13 @@ export default function MilkDeliveryPage() {
                       else if (showQuickAction === 'CHANGE_BASE') handleQuickAction('CHANGE_QUANTITY');
                     }}
                     disabled={loading}
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium transition"
+                    className="min-h-[44px] px-4 py-2 bg-[#69D9AD] hover:bg-[#86D5D4] text-[#101211] rounded-xs text-xs font-semibold transition"
                   >
                     Confirm Action
                   </button>
                   <button
                     onClick={() => setShowQuickAction(null)}
-                    className="px-3 py-2 bg-[#242528] text-[#8B9CB5] hover:text-[#F1EADE] rounded-lg text-xs font-medium"
+                    className="min-h-[44px] px-3 py-2 bg-[#202622] text-[#A4B0A6] hover:text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs font-medium"
                   >
                     Cancel
                   </button>
@@ -392,7 +384,9 @@ export default function MilkDeliveryPage() {
 
           {/* Voice Action Pipeline Card */}
           <div className="space-y-2">
-            <h2 className="text-sm font-semibold text-[#F1EADE]">Voice Pipeline Simulator</h2>
+            <h2 className="text-xs font-semibold text-[#F2EFE6] uppercase font-mono tracking-wider">
+              Voice Dispatch Pipeline
+            </h2>
             <VoiceActionCard
               verticalType="milk_delivery"
               workspaceId="ws_milk_01"
@@ -402,29 +396,31 @@ export default function MilkDeliveryPage() {
           </div>
 
           {/* Upcoming Delivery Calendar */}
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#2C3530]">
               <div className="flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4 text-emerald-400" />
-                <h3 className="text-sm font-semibold text-[#F1EADE]">Upcoming Delivery Calendar (November 2026)</h3>
+                <CalendarIcon className="w-4 h-4 text-[#86D5D4]" />
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">
+                  Active Delivery Calendar (November 2026)
+                </h3>
               </div>
-              <span className="text-xs text-[#8B9CB5] font-mono">Real-time DB Schedule</span>
+              <span className="text-xs text-[#A4B0A6] font-mono">Real-time SQLite Ledger</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 pt-2">
               {bill?.dailyEntries?.slice(14, 28).map((d: any) => (
                 <div
                   key={d.date}
-                  className={`p-3 rounded-lg border text-xs font-mono flex flex-col justify-between ${
+                  className={`p-3 rounded-xs border text-xs font-mono flex flex-col justify-between ${
                     d.status === 'PAUSED'
-                      ? 'bg-amber-950/20 border-amber-800/40 text-amber-300'
+                      ? 'bg-[#202622] border-[#DAB77A] text-[#DAB77A]'
                       : d.status === 'MODIFIED'
-                      ? 'bg-blue-950/20 border-blue-800/40 text-blue-300'
-                      : 'bg-[#151415] border-[#2A2C30] text-[#F1EADE]'
+                      ? 'bg-[#202622] border-[#86D5D4] text-[#86D5D4]'
+                      : 'bg-[#101211] border-[#2C3530] text-[#F2EFE6]'
                   }`}
                 >
-                  <div className="text-[11px] text-[#8B9CB5]">{d.date.slice(5)}</div>
-                  <div className="text-sm font-bold my-1">{d.deliveredQuantityMl} ml</div>
+                  <div className="text-[11px] text-[#A4B0A6]">{d.date.slice(5)}</div>
+                  <div className="text-sm font-bold my-1 tabular-nums">{d.deliveredQuantityMl} ml</div>
                   <div className="text-[10px] capitalize font-medium">{d.status}</div>
                 </div>
               ))}
@@ -437,52 +433,52 @@ export default function MilkDeliveryPage() {
       {activeTab === 'vendor' && (
         <div className="space-y-6">
           {/* Manifest Controls & Summary */}
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#2C3530]">
               <div>
-                <h2 className="text-base font-bold text-[#F1EADE]">Daily Delivery Manifest</h2>
-                <p className="text-xs text-[#8B9CB5] mt-0.5">
-                  Route dispatch manifest for morning delivery drop · Cutoff: 20:00 IST
+                <h2 className="text-base font-bold text-[#F2EFE6]">Daily Route Delivery Manifest</h2>
+                <p className="text-xs text-[#A4B0A6] mt-0.5 font-mono">
+                  Morning depot drop run-sheet : Enforced 20:00 IST cutoff
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-                <label className="text-xs text-[#8B9CB5] font-medium">Select Route Date:</label>
+                <label className="text-xs text-[#A4B0A6] font-medium">Route Date:</label>
                 <input
                   type="date"
                   value={manifestDate}
                   onChange={(e) => setManifestDate(e.target.value)}
-                  className="bg-[#151415] border border-[#2A2C30] rounded-lg px-3 py-1.5 text-xs text-[#F1EADE]"
+                  className="bg-[#101211] border border-[#46534A] rounded-xs px-3 py-1.5 text-xs text-[#F2EFE6]"
                 />
               </div>
             </div>
 
             {/* Metric Summary */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-              <div className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg">
-                <div className="text-[11px] text-[#8B9CB5]">Total Dispatch Volume</div>
-                <div className="text-xl font-bold text-emerald-400 font-mono mt-1">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-1">
+              <div className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs">
+                <div className="text-[11px] text-[#A4B0A6] font-mono">Total Volume</div>
+                <div className="text-xl font-bold text-[#69D9AD] font-mono tabular-nums mt-1">
                   {manifest?.totalVolumeLitres || 0} L
                 </div>
               </div>
 
-              <div className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg">
-                <div className="text-[11px] text-[#8B9CB5]">Active Deliveries</div>
-                <div className="text-xl font-bold text-[#F1EADE] font-mono mt-1">
-                  {manifest?.activeDeliveries || 0} Customers
+              <div className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs">
+                <div className="text-[11px] text-[#A4B0A6] font-mono">Active Drops</div>
+                <div className="text-xl font-bold text-[#F2EFE6] font-mono tabular-nums mt-1">
+                  {manifest?.activeDeliveries || 0}
                 </div>
               </div>
 
-              <div className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg">
-                <div className="text-[11px] text-[#8B9CB5]">Paused Customers</div>
-                <div className="text-xl font-bold text-amber-400 font-mono mt-1">
+              <div className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs">
+                <div className="text-[11px] text-[#A4B0A6] font-mono">Paused Customers</div>
+                <div className="text-xl font-bold text-[#DAB77A] font-mono tabular-nums mt-1">
                   {manifest?.pausedDeliveries || 0}
                 </div>
               </div>
 
-              <div className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg">
-                <div className="text-[11px] text-[#8B9CB5]">Extra Deliveries</div>
-                <div className="text-xl font-bold text-blue-400 font-mono mt-1">
+              <div className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs">
+                <div className="text-[11px] text-[#A4B0A6] font-mono">Extra Deliveries</div>
+                <div className="text-xl font-bold text-[#86D5D4] font-mono tabular-nums mt-1">
                   {manifest?.extraDeliveries || 0}
                 </div>
               </div>
@@ -490,15 +486,19 @@ export default function MilkDeliveryPage() {
           </div>
 
           {/* Customer Delivery Run-List Table */}
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-[#F1EADE]">Customer Delivery Run-List ({manifestDate})</h3>
-              <span className="text-xs text-[#8B9CB5] font-mono">{manifest?.items?.length || 0} Deliveries</span>
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#2C3530]">
+              <h3 className="text-sm font-semibold text-[#F2EFE6]">
+                Customer Delivery Run-List ({manifestDate})
+              </h3>
+              <span className="text-xs text-[#A4B0A6] font-mono tabular-nums">
+                {manifest?.items?.length || 0} Deliveries
+              </span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#151415] text-[#8B9CB5] border-b border-[#2A2C30]">
+                <thead className="bg-[#101211] text-[#A4B0A6] border-b border-[#46534A] font-mono">
                   <tr>
                     <th className="p-3">Customer</th>
                     <th className="p-3">Phone</th>
@@ -508,29 +508,29 @@ export default function MilkDeliveryPage() {
                     <th className="p-3">Special Instructions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#2A2C30] font-mono">
+                <tbody className="divide-y divide-[#2C3530] font-mono">
                   {manifest?.items?.map((item: any) => (
-                    <tr key={item.customerId} className="hover:bg-[#242528]/40">
-                      <td className="p-3 text-[#F1EADE] font-semibold">{item.customerName}</td>
-                      <td className="p-3 text-[#8B9CB5]">{item.customerPhone}</td>
-                      <td className="p-3 text-[#F1EADE]">{item.productName}</td>
-                      <td className="p-3 text-right text-emerald-400 font-bold">
+                    <tr key={item.customerId} className="hover:bg-[#202622]">
+                      <td className="p-3 text-[#F2EFE6] font-semibold">{item.customerName}</td>
+                      <td className="p-3 text-[#A4B0A6]">{item.customerPhone}</td>
+                      <td className="p-3 text-[#C3CBC3]">{item.productName}</td>
+                      <td className="p-3 text-right text-[#69D9AD] font-bold tabular-nums">
                         {item.scheduledQuantityMl} ml
                       </td>
                       <td className="p-3">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
+                          className={`px-2 py-0.5 rounded-xs text-[10px] font-semibold ${
                             item.status === 'PAUSED'
-                              ? 'bg-amber-950/60 text-amber-300 border border-amber-800'
+                              ? 'bg-[#202622] text-[#DAB77A] border border-[#DAB77A]'
                               : item.status === 'MODIFIED'
-                              ? 'bg-blue-950/60 text-blue-300 border border-blue-800'
-                              : 'bg-emerald-950/60 text-emerald-300 border border-emerald-800'
+                              ? 'bg-[#202622] text-[#86D5D4] border border-[#86D5D4]'
+                              : 'bg-[#202622] text-[#A4E4B5] border border-[#A4E4B5]'
                           }`}
                         >
                           {item.status}
                         </span>
                       </td>
-                      <td className="p-3 text-[#8B9CB5] text-[11px] truncate max-w-xs">
+                      <td className="p-3 text-[#A4B0A6] text-[11px] truncate max-w-xs">
                         {item.notes || 'Standard Morning Drop'}
                       </td>
                     </tr>

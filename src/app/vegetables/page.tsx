@@ -4,21 +4,16 @@ import React, { useState, useEffect } from 'react';
 import {
   Carrot,
   Scale,
-  Leaf,
   CheckCircle2,
   Package,
   Trash2,
   Plus,
-  Users,
-  Layers,
-  ArrowRight,
-  Clock,
   RefreshCw,
   ShoppingBag,
-  Sparkles,
 } from 'lucide-react';
 import { ModuleStatusBadge } from '@/components/ModuleStatusBadge';
 import { VoiceActionCard } from '@/components/VoiceActionCard';
+import IndustryAccentScene from '@/components/spatial/IndustryAccentScene';
 
 export default function VegetableVendorPage() {
   const [activeTab, setActiveTab] = useState<'customer' | 'vendor'>('customer');
@@ -163,7 +158,7 @@ export default function VegetableVendorPage() {
       });
 
       if (res.ok) {
-        setActionSuccess('Vegetable produce basket confirmed and sent to Mandi vendor dispatch!');
+        setActionSuccess('Vegetable produce basket confirmed and committed to Mandi vendor dispatch.');
         setBasket([]);
         await loadData();
         setTimeout(() => setActionSuccess(null), 4000);
@@ -193,7 +188,7 @@ export default function VegetableVendorPage() {
       });
 
       if (res.ok) {
-        setActionSuccess(`Order ${orderId} marked as ${newStatus}`);
+        setActionSuccess(`Order ${orderId} advanced to ${newStatus}`);
         await loadData();
         setTimeout(() => setActionSuccess(null), 3000);
       }
@@ -231,66 +226,62 @@ export default function VegetableVendorPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header with Spatial Accent */}
+      <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-            <Carrot className="w-6 h-6" />
-          </div>
+          <IndustryAccentScene moduleType="vegetable" accentColor="#69D9AD" />
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-[#F1EADE]">Vegetable Vendor Operations</h1>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-[#F2EFE6]">
+                Vegetable Vendor Operations
+              </h1>
               <ModuleStatusBadge status="active" />
             </div>
-            <p className="text-xs text-[#8B9CB5] mt-1">
-              Subhash Fresh Vegetable Market · Dynamic mandi rates, fractional weights (grams/kg), and bundles
+            <p className="text-xs text-[#A4B0A6] mt-1 font-mono">
+              Subhash Fresh Vegetable Market : Mandi spot rates, fractional weights (grams/kg), and bundles
             </p>
           </div>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center bg-[#151415] p-1 rounded-xl border border-[#2A2C30]">
+        {/* Tab Switcher with min 44px targets */}
+        <div className="flex items-center bg-[#101211] p-1 rounded-xs border border-[#46534A]">
           <button
             onClick={() => setActiveTab('customer')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all min-h-[44px] ${
+            className={`min-h-[44px] flex items-center gap-2 px-4 py-2 rounded-xs text-xs font-semibold transition-all ${
               activeTab === 'customer'
-                ? 'bg-emerald-600 text-white shadow-md'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#69D9AD]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <ShoppingBag className="w-4 h-4" />
-            Customer Produce Basket
+            <ShoppingBag className="w-4 h-4 text-[#69D9AD]" />
+            <span>Customer Produce Basket</span>
           </button>
           <button
             onClick={() => setActiveTab('vendor')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all min-h-[44px] ${
+            className={`min-h-[44px] flex items-center gap-2 px-4 py-2 rounded-xs text-xs font-semibold transition-all ${
               activeTab === 'vendor'
-                ? 'bg-emerald-600 text-white shadow-md'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#DAB77A]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <Scale className="w-4 h-4" />
-            Vendor Mandi Fulfillment
+            <Scale className="w-4 h-4 text-[#DAB77A]" />
+            <span>Vendor Mandi Fulfillment</span>
           </button>
         </div>
       </div>
 
       {actionSuccess && (
-        <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-sm flex items-center gap-3 animate-fade-in">
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+        <div className="p-3 bg-[#202622] border border-[#A4E4B5] rounded-xs text-xs text-[#A4E4B5] flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-[#A4E4B5] shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
 
       {/* Voice Action Card */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-[#F1EADE] flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
-            Natural Speech Voice Ordering (Hinglish/Hindi/English)
-          </h2>
-          <span className="text-[10px] text-[#8B9CB5] font-mono">Deterministic Intent Router Ready</span>
-        </div>
+        <h2 className="text-xs font-semibold text-[#F2EFE6] uppercase font-mono tracking-wider">
+          Voice Produce Dispatch
+        </h2>
         <VoiceActionCard
           verticalType="vegetable_vendor"
           workspaceId="ws_veg_01"
@@ -320,18 +311,19 @@ export default function VegetableVendorPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Produce Rate Board */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#2C3530]">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#F1EADE]">Daily Mandi Fresh Produce Board</h3>
-                  <p className="text-xs text-[#8B9CB5]">Select items with fractional weights (grams, kg, bundles)</p>
+                  <h3 className="text-sm font-semibold text-[#F2EFE6]">Daily Mandi Fresh Produce Board</h3>
+                  <p className="text-xs text-[#A4B0A6]">Fractional units supported: grams, kg, bundles</p>
                 </div>
                 <button
                   onClick={loadData}
-                  className="p-2 text-[#8B9CB5] hover:text-[#F1EADE] transition-colors"
+                  className="min-h-[44px] px-3 py-1.5 text-xs text-[#A4B0A6] hover:text-[#F2EFE6] flex items-center gap-1.5 border border-[#46534A] rounded-xs bg-[#202622]"
                   title="Refresh rates"
                 >
-                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                  <span>Refresh</span>
                 </button>
               </div>
 
@@ -343,53 +335,46 @@ export default function VegetableVendorPage() {
                   return (
                     <div
                       key={p.id}
-                      className="bg-[#151415] border border-[#2A2C30] rounded-xl p-4 flex flex-col justify-between hover:border-emerald-500/40 transition-all group"
+                      className="bg-[#101211] border border-[#2C3530] rounded-xs p-4 flex flex-col justify-between hover:border-[#69D9AD] transition-colors"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono text-[#8B9CB5] uppercase">{p.category}</span>
-                          <span className="text-xs font-bold text-emerald-400 font-mono">
-                            ₹{ratePerKg} {isBundle ? '/bundle' : '/kg'}
+                          <span className="text-[10px] font-mono text-[#A4B0A6] uppercase">{p.category}</span>
+                          <span className="text-xs font-mono font-bold text-[#69D9AD] tabular-nums">
+                            ₹{ratePerKg} / {p.unit}
                           </span>
                         </div>
-                        <h4 className="text-sm font-bold text-[#F1EADE] group-hover:text-emerald-300 transition-colors">
-                          {p.name}
-                        </h4>
+                        <div className="text-sm font-semibold text-[#F2EFE6]">{p.name}</div>
+                        <div className="text-[11px] text-[#A4B0A6] font-mono">
+                          Aliases: {p.aliases?.join(', ')}
+                        </div>
                       </div>
 
-                      <div className="mt-4 pt-3 border-t border-[#2A2C30] flex flex-wrap items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5 pt-3 mt-2 border-t border-[#2C3530]">
                         {isBundle ? (
-                          <>
-                            <button
-                              onClick={() => addItemToBasket(p, 1, 'bundle')}
-                              className="px-2.5 py-1.5 rounded-lg bg-[#2A2C30] hover:bg-emerald-600 hover:text-white text-[11px] font-semibold text-[#F1EADE] transition-all min-h-[36px]"
-                            >
-                              +1 Bundle
-                            </button>
-                            <button
-                              onClick={() => addItemToBasket(p, 2, 'bundles')}
-                              className="px-2.5 py-1.5 rounded-lg bg-[#2A2C30] hover:bg-emerald-600 hover:text-white text-[11px] font-semibold text-[#F1EADE] transition-all min-h-[36px]"
-                            >
-                              +2 Bundles
-                            </button>
-                          </>
+                          <button
+                            onClick={() => addItemToBasket(p, 1, 'bundle')}
+                            className="min-h-[36px] px-2.5 py-1 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs font-mono"
+                          >
+                            +1 Bundle
+                          </button>
                         ) : (
                           <>
                             <button
                               onClick={() => addItemToBasket(p, 250, 'grams')}
-                              className="px-2.5 py-1.5 rounded-lg bg-[#2A2C30] hover:bg-emerald-600 hover:text-white text-[11px] font-semibold text-[#F1EADE] transition-all min-h-[36px]"
+                              className="min-h-[36px] px-2 py-1 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs font-mono"
                             >
                               +250g
                             </button>
                             <button
                               onClick={() => addItemToBasket(p, 500, 'grams')}
-                              className="px-2.5 py-1.5 rounded-lg bg-[#2A2C30] hover:bg-emerald-600 hover:text-white text-[11px] font-semibold text-[#F1EADE] transition-all min-h-[36px]"
+                              className="min-h-[36px] px-2 py-1 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs font-mono"
                             >
                               +500g
                             </button>
                             <button
                               onClick={() => addItemToBasket(p, 1, 'kg')}
-                              className="px-2.5 py-1.5 rounded-lg bg-[#2A2C30] hover:bg-emerald-600 hover:text-white text-[11px] font-semibold text-[#F1EADE] transition-all min-h-[36px]"
+                              className="min-h-[36px] px-2 py-1 bg-[#202622] hover:bg-[#2A322D] text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs font-mono"
                             >
                               +1 kg
                             </button>
@@ -400,95 +385,65 @@ export default function VegetableVendorPage() {
                   );
                 })}
               </div>
-
-              {/* Local Produce Aliases Card */}
-              <div className="mt-4 pt-4 border-t border-[#2A2C30]">
-                <div className="flex items-center gap-2 mb-2">
-                  <Leaf className="w-4 h-4 text-emerald-400" />
-                  <span className="text-xs font-semibold text-[#F1EADE]">Colloquial Produce Vocabulary</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {aliases.map((a) => (
-                    <span
-                      key={a.id}
-                      className="px-2 py-0.5 rounded-md bg-[#151415] border border-[#2A2C30] text-[11px] text-[#8B9CB5]"
-                    >
-                      <strong className="text-emerald-300">{a.alias_term}</strong> → {a.produce_name}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
 
-          {/* Customer Basket Sidebar */}
+          {/* Customer Produce Basket */}
           <div className="space-y-4">
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <ShoppingBag className="w-4 h-4 text-emerald-400" />
-                  <h3 className="text-sm font-semibold text-[#F1EADE]">Produce Basket</h3>
-                </div>
-                <span className="text-xs text-[#8B9CB5] font-mono">{basket.length} items</span>
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#2C3530]">
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">Produce Basket</h3>
+                <span className="text-xs text-[#A4B0A6] font-mono tabular-nums">{basket.length} Items</span>
               </div>
 
               {basket.length === 0 ? (
-                <div className="p-8 text-center text-xs text-[#8B9CB5] border border-dashed border-[#2A2C30] rounded-lg">
-                  Basket is empty. Pick items from the Mandi board on the left or use voice.
+                <div className="p-6 text-center text-xs text-[#A4B0A6] border border-dashed border-[#46534A] rounded-xs">
+                  Basket is empty. Select weights from the Mandi board.
                 </div>
               ) : (
-                <div className="space-y-3">
-                  <div className="divide-y divide-[#2A2C30] max-h-80 overflow-y-auto pr-1">
-                    {basket.map((item, idx) => (
-                      <div key={idx} className="py-2.5 flex items-center justify-between text-xs">
-                        <div className="space-y-0.5">
-                          <p className="font-semibold text-[#F1EADE]">{item.name}</p>
-                          <p className="text-[11px] text-[#8B9CB5] font-mono">
-                            {item.quantity} {item.unit} @ ₹{(item.dailyRatePaise / 100).toFixed(2)}/kg
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="font-bold text-emerald-400 font-mono">
-                            ₹{(item.lineTotalPaise / 100).toFixed(2)}
-                          </span>
-                          <button
-                            onClick={() => removeItemFromBasket(idx)}
-                            className="text-[#8B9CB5] hover:text-rose-400 transition-colors p-1"
-                            title="Remove item"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                <div className="space-y-2">
+                  {basket.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs flex items-center justify-between text-xs"
+                    >
+                      <div>
+                        <div className="font-semibold text-[#F2EFE6]">{item.name}</div>
+                        <div className="text-[11px] text-[#A4B0A6] font-mono tabular-nums">
+                          {item.quantity} {item.unit}
                         </div>
                       </div>
-                    ))}
-                  </div>
 
-                  <div className="pt-3 border-t border-[#2A2C30] space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-[#8B9CB5]">Subtotal (Integer Paise)</span>
-                      <span className="text-sm font-bold text-[#F1EADE] font-mono">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono font-bold text-[#69D9AD] tabular-nums">
+                          ₹{(item.lineTotalPaise / 100).toFixed(2)}
+                        </span>
+                        <button
+                          onClick={() => removeItemFromBasket(idx)}
+                          className="min-w-[32px] min-h-[32px] flex items-center justify-center text-[#A4B0A6] hover:text-[#F1A79C]"
+                          aria-label={`Remove ${item.name}`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="pt-3 border-t border-[#2C3530] space-y-2">
+                    <div className="flex justify-between text-xs font-mono">
+                      <span className="text-[#A4B0A6]">Total Basket:</span>
+                      <span className="text-base font-bold text-[#69D9AD] tabular-nums">
                         ₹{(basketSubtotalPaise / 100).toFixed(2)}
                       </span>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[11px] text-[#8B9CB5]">Delivery Address</label>
-                      <input
-                        type="text"
-                        value={deliveryAddress}
-                        onChange={(e) => setDeliveryAddress(e.target.value)}
-                        className="w-full bg-[#151415] border border-[#2A2C30] rounded-lg px-3 py-2 text-xs text-[#F1EADE] focus:outline-none focus:border-emerald-500"
-                        placeholder="House / Flat / Street details"
-                      />
                     </div>
 
                     <button
                       onClick={handlePlaceOrder}
                       disabled={loading || basket.length === 0}
-                      className="w-full mt-3 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all min-h-[44px] shadow-lg shadow-emerald-950/40"
+                      className="min-h-[44px] w-full py-2.5 bg-[#69D9AD] hover:bg-[#86D5D4] text-[#101211] rounded-xs text-xs font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      <ShoppingBag className="w-4 h-4" />
-                      Place Mandi Order (₹{(basketSubtotalPaise / 100).toFixed(2)})
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Confirm Produce Order</span>
                     </button>
                   </div>
                 </div>
@@ -501,137 +456,108 @@ export default function VegetableVendorPage() {
       {/* VENDOR TAB */}
       {activeTab === 'vendor' && (
         <div className="space-y-6">
-          {/* Vendor Produce Aggregation Manifest */}
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Scale className="w-5 h-5 text-emerald-400" />
-                <div>
-                  <h3 className="text-sm font-semibold text-[#F1EADE]">
-                    Daily Mandi Procurement & Weighing Manifest
-                  </h3>
-                  <p className="text-xs text-[#8B9CB5]">
-                    Aggregated weights and bundles required across all active orders
-                  </p>
-                </div>
+          {/* Mandi Prep Aggregation Manifest */}
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#2C3530]">
+              <div>
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">
+                  Vendor Mandi Preparation Manifest
+                </h3>
+                <p className="text-xs text-[#A4B0A6] mt-0.5 font-mono">
+                  Aggregated weights required for morning market prep and parcel dispatch
+                </p>
               </div>
-              <span className="text-xs font-mono text-[#8B9CB5]">{manifestMap.size} Produce Types</span>
+              <button
+                onClick={loadData}
+                className="min-h-[44px] px-3.5 py-1.5 bg-[#202622] text-[#A4B0A6] hover:text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs flex items-center gap-1.5"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Refresh</span>
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {Array.from(manifestMap.values()).map((m, idx) => {
-                const totalGrams = m.grams + m.kg * 1000;
-                const displayWeight =
-                  totalGrams > 0 ? `${(totalGrams / 1000).toFixed(2)} kg` : null;
-                const displayBundles = m.bundles > 0 ? `${m.bundles} bundles` : null;
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              {Array.from(manifestMap.entries()).map(([key, data]) => {
+                const totalKg = data.kg + data.grams / 1000;
                 return (
-                  <div
-                    key={idx}
-                    className="bg-[#151415] border border-[#2A2C30] rounded-xl p-3.5 space-y-1"
-                  >
-                    <span className="text-xs font-semibold text-[#F1EADE] truncate block">{m.name}</span>
-                    <div className="flex items-center gap-2">
-                      {displayWeight && (
-                        <span className="text-sm font-bold text-emerald-400 font-mono">
-                          {displayWeight}
-                        </span>
-                      )}
-                      {displayBundles && (
-                        <span className="text-xs font-bold text-emerald-300 font-mono bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800">
-                          {displayBundles}
-                        </span>
-                      )}
+                  <div key={key} className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs space-y-1">
+                    <div className="text-xs font-semibold text-[#F2EFE6]">{data.name}</div>
+                    <div className="text-sm font-mono font-bold text-[#69D9AD] tabular-nums">
+                      {data.bundles > 0
+                        ? `${data.bundles} Bundles`
+                        : `${totalKg.toFixed(2)} kg total`}
                     </div>
+                    {data.grams > 0 && data.kg > 0 && (
+                      <div className="text-[10px] text-[#A4B0A6] font-mono tabular-nums">
+                        ({data.kg} kg + {data.grams}g)
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Orders Fulfillment Board */}
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Package className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-sm font-semibold text-[#F1EADE]">Mandi Orders Queue</h3>
-              </div>
-              <span className="text-xs text-[#8B9CB5] font-mono">{orders.length} Active Orders</span>
-            </div>
-
-            {orders.length === 0 ? (
-              <div className="p-8 text-center text-xs text-[#8B9CB5] border border-dashed border-[#2A2C30] rounded-lg">
-                No orders waiting in queue.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {orders.map((o) => (
-                  <div
-                    key={o.id}
-                    className="bg-[#151415] border border-[#2A2C30] rounded-xl p-4 space-y-3"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2A2C30] pb-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono font-bold text-[#F1EADE]">{o.id}</span>
-                          <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
-                              o.status === 'DELIVERED'
-                                ? 'bg-emerald-950/60 text-emerald-300 border-emerald-800'
-                                : o.status === 'WEIGHED_PACKED'
-                                ? 'bg-amber-950/60 text-amber-300 border-amber-800'
-                                : 'bg-blue-950/60 text-blue-300 border-blue-800'
-                            }`}
-                          >
-                            {o.status}
-                          </span>
-                        </div>
-                        <p className="text-xs text-[#8B9CB5] mt-1">
-                          Customer: <span className="text-[#F1EADE] font-semibold">{o.customer_name}</span> ({o.customer_phone}) · {o.delivery_address}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-emerald-400 font-mono">
-                          ₹{(o.estimated_total_paise / 100).toFixed(2)}
+          {/* Orders Queue Table */}
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-3">
+            <h3 className="text-sm font-semibold text-[#F2EFE6]">Customer Orders Queue</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-[#101211] text-[#A4B0A6] border-b border-[#46534A] font-mono">
+                  <tr>
+                    <th className="p-3">Order ID</th>
+                    <th className="p-3">Items Breakdown</th>
+                    <th className="p-3 text-right">Total</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#2C3530] font-mono">
+                  {orders.map((ord) => (
+                    <tr key={ord.id} className="hover:bg-[#202622]">
+                      <td className="p-3 text-[#F2EFE6] font-semibold">{ord.id}</td>
+                      <td className="p-3 text-[#A4B0A6]">
+                        {ord.items?.map((it: any) => `${it.requested_item_name} (${it.quantity} ${it.unit})`).join(', ')}
+                      </td>
+                      <td className="p-3 text-right text-[#69D9AD] font-bold tabular-nums">
+                        ₹{(ord.total_amount_paise / 100).toFixed(2)}
+                      </td>
+                      <td className="p-3">
+                        <span
+                          className={`px-2 py-0.5 rounded-xs text-[10px] font-semibold ${
+                            ord.status === 'FULFILLED'
+                              ? 'bg-[#202622] text-[#A4E4B5] border border-[#A4E4B5]'
+                              : ord.status === 'PACKED'
+                              ? 'bg-[#202622] text-[#86D5D4] border border-[#86D5D4]'
+                              : 'bg-[#202622] text-[#DAB77A] border border-[#DAB77A]'
+                          }`}
+                        >
+                          {ord.status}
                         </span>
-                        {o.status === 'CONFIRMED' && (
+                      </td>
+                      <td className="p-3 text-right">
+                        {ord.status === 'CONFIRMED' && (
                           <button
-                            onClick={() => handleUpdateStatus(o.id, 'WEIGHED_PACKED')}
-                            className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition-all min-h-[36px]"
+                            onClick={() => handleUpdateStatus(ord.id, 'PACKED')}
+                            className="min-h-[36px] px-3 py-1 bg-[#202622] hover:bg-[#2A322D] text-[#86D5D4] border border-[#86D5D4] rounded-xs text-xs font-sans"
                           >
-                            Weigh & Pack
+                            Mark Packed
                           </button>
                         )}
-                        {o.status === 'WEIGHED_PACKED' && (
+                        {ord.status === 'PACKED' && (
                           <button
-                            onClick={() => handleUpdateStatus(o.id, 'DELIVERED')}
-                            className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-all min-h-[36px]"
+                            onClick={() => handleUpdateStatus(ord.id, 'FULFILLED')}
+                            className="min-h-[36px] px-3 py-1 bg-[#69D9AD] hover:bg-[#86D5D4] text-[#101211] rounded-xs text-xs font-semibold font-sans"
                           >
                             Mark Delivered
                           </button>
                         )}
-                      </div>
-                    </div>
-
-                    {/* Order Line Items */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-                      {(o.items || []).map((item: any, iIdx: number) => (
-                        <div
-                          key={iIdx}
-                          className="bg-[#1B1C1E] border border-[#2A2C30] rounded-lg p-2 flex items-center justify-between"
-                        >
-                          <span className="text-[#F1EADE] font-medium">{item.requested_item_name}</span>
-                          <span className="text-emerald-400 font-mono font-semibold">
-                            {item.quantity} {item.unit}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

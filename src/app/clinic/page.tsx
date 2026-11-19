@@ -4,18 +4,16 @@ import React, { useState, useEffect } from 'react';
 import {
   Stethoscope,
   Calendar,
-  Clock,
   ShieldAlert,
   CheckCircle2,
   Users,
   AlertCircle,
-  XCircle,
   RefreshCw,
-  Sparkles,
   UserCheck,
 } from 'lucide-react';
 import { ModuleStatusBadge } from '@/components/ModuleStatusBadge';
 import { VoiceActionCard } from '@/components/VoiceActionCard';
+import IndustryAccentScene from '@/components/spatial/IndustryAccentScene';
 
 export default function ClinicAppointmentsPage() {
   const [activeTab, setActiveTab] = useState<'patient' | 'doctor'>('patient');
@@ -90,7 +88,6 @@ export default function ClinicAppointmentsPage() {
   async function handleBookAppointment() {
     setErrorMessage(null);
 
-    // Client-side privacy guard test
     const lowerNotes = patientNotes.toLowerCase();
     if (
       lowerNotes.includes('fever') ||
@@ -122,7 +119,7 @@ export default function ClinicAppointmentsPage() {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setActionSuccess(data.result?.summary || 'Appointment confirmed successfully!');
+        setActionSuccess(data.result?.summary || 'Appointment confirmed successfully.');
         setPatientNotes('');
         await loadSlots(selectedDoctorId, selectedDate);
         await loadAppointments();
@@ -154,7 +151,7 @@ export default function ClinicAppointmentsPage() {
       });
 
       if (res.ok) {
-        setActionSuccess(`Appointment ${appointmentId} cancelled and slot released`);
+        setActionSuccess(`Appointment ${appointmentId} cancelled and slot released.`);
         await loadSlots(selectedDoctorId, selectedDate);
         await loadAppointments();
         setTimeout(() => setActionSuccess(null), 3000);
@@ -173,86 +170,82 @@ export default function ClinicAppointmentsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header with Spatial Accent */}
+      <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
-            <Stethoscope className="w-6 h-6" />
-          </div>
+          <IndustryAccentScene moduleType="clinic" accentColor="#86D5D4" />
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-[#F1EADE]">Clinic Outpatient Scheduling</h1>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-[#F2EFE6]">
+                Clinic Outpatient Scheduling
+              </h1>
               <ModuleStatusBadge status="active" />
             </div>
-            <p className="text-xs text-[#8B9CB5] mt-1">
-              Arogya Community Health Clinic · Outpatient slots, doctor schedules, and non-diagnostic privacy boundaries
+            <p className="text-xs text-[#A4B0A6] mt-1 font-mono">
+              Arogya Health Clinic : Outpatient slot allocation and strict non-diagnostic privacy boundary
             </p>
           </div>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center bg-[#151415] p-1 rounded-xl border border-[#2A2C30]">
+        {/* Tab Switcher with min 44px targets */}
+        <div className="flex items-center bg-[#101211] p-1 rounded-xs border border-[#46534A]">
           <button
             onClick={() => setActiveTab('patient')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all min-h-[44px] ${
+            className={`min-h-[44px] flex items-center gap-2 px-4 py-2 rounded-xs text-xs font-semibold transition-all ${
               activeTab === 'patient'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#86D5D4]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <UserCheck className="w-4 h-4" />
-            Patient Slot Booking
+            <UserCheck className="w-4 h-4 text-[#86D5D4]" />
+            <span>Patient Slot Booking</span>
           </button>
           <button
             onClick={() => setActiveTab('doctor')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all min-h-[44px] ${
+            className={`min-h-[44px] flex items-center gap-2 px-4 py-2 rounded-xs text-xs font-semibold transition-all ${
               activeTab === 'doctor'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#69D9AD]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <Calendar className="w-4 h-4" />
-            Doctor Daily Manifest
+            <Calendar className="w-4 h-4 text-[#69D9AD]" />
+            <span>Doctor Daily Manifest</span>
           </button>
         </div>
       </div>
 
       {/* Non-Diagnostic Privacy Banner */}
-      <div className="p-4 bg-blue-950/20 border border-blue-800/40 rounded-xl flex items-start gap-3">
-        <ShieldAlert className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+      <div className="p-4 bg-[#202622] border border-[#46534A] rounded-xs flex items-start gap-3">
+        <ShieldAlert className="w-5 h-5 text-[#86D5D4] shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <div className="text-xs font-semibold text-blue-200">
-            Strict Non-Diagnostic Operational Boundary
+          <div className="text-xs font-semibold text-[#F2EFE6] font-mono">
+            STRICT NON-DIAGNOSTIC OPERATIONAL BOUNDARY
           </div>
-          <p className="text-xs text-[#8B9CB5] leading-relaxed">
+          <p className="text-xs text-[#C3CBC3] leading-relaxed">
             ZYVO operates strictly as an administrative scheduling engine. Voice submissions and forms are processed only for outpatient doctor slot availability, booking, rescheduling, and cancellation. Clinical symptoms, medical notes, diagnostics, and prescriptions are strictly ignored and never persisted.
           </p>
         </div>
       </div>
 
       {actionSuccess && (
-        <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-sm flex items-center gap-3 animate-fade-in">
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+        <div className="p-3 bg-[#202622] border border-[#A4E4B5] rounded-xs text-xs text-[#A4E4B5] flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-[#A4E4B5] shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-300 text-sm flex items-center gap-3 animate-fade-in">
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+        <div className="p-3 bg-[#202622] border border-[#F1A79C] rounded-xs text-xs text-[#F1A79C] flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-[#F1A79C] shrink-0" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {/* Voice Action Card */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-[#F1EADE] flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            Natural Speech Clinic Scheduling (Hinglish/Hindi/English)
-          </h2>
-          <span className="text-[10px] text-[#8B9CB5] font-mono">Deterministic Intent Router Ready</span>
-        </div>
+        <h2 className="text-xs font-semibold text-[#F2EFE6] uppercase font-mono tracking-wider">
+          Voice Scheduling Dispatch
+        </h2>
         <VoiceActionCard
           verticalType="clinic"
           workspaceId="ws_clinic_01"
@@ -282,10 +275,10 @@ export default function ClinicAppointmentsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Doctor Directory */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-              <div>
-                <h3 className="text-sm font-semibold text-[#F1EADE]">Available Attending Physicians</h3>
-                <p className="text-xs text-[#8B9CB5]">Select a physician to view outpatient slots and schedule a consultation</p>
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+              <div className="pb-2 border-b border-[#2C3530]">
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">Available Attending Physicians</h3>
+                <p className="text-xs text-[#A4B0A6]">Select a physician to view outpatient slots and schedule an appointment</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -295,30 +288,30 @@ export default function ClinicAppointmentsPage() {
                     <div
                       key={doc.id}
                       onClick={() => setSelectedDoctorId(doc.id)}
-                      className={`cursor-pointer rounded-xl p-4 border transition-all flex flex-col justify-between ${
+                      className={`cursor-pointer rounded-xs p-4 border transition-colors flex flex-col justify-between ${
                         isSelected
-                          ? 'bg-blue-950/20 border-blue-500 shadow-md ring-1 ring-blue-500/30'
-                          : 'bg-[#151415] border-[#2A2C30] hover:border-blue-500/40'
+                          ? 'bg-[#2A322D] border-[#86D5D4]'
+                          : 'bg-[#101211] border-[#2C3530] hover:border-[#46534A]'
                       }`}
                     >
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-mono text-[#8B9CB5] uppercase">{doc.department}</span>
-                          <span className="text-xs font-bold text-emerald-400 font-mono">
+                          <span className="text-[10px] font-mono text-[#A4B0A6] uppercase">{doc.department}</span>
+                          <span className="text-xs font-bold text-[#69D9AD] font-mono tabular-nums">
                             ₹{(doc.consultation_fee_paise / 100).toFixed(0)}
                           </span>
                         </div>
-                        <h4 className="text-sm font-bold text-[#F1EADE]">{doc.name}</h4>
-                        <p className="text-[11px] text-[#8B9CB5] font-mono">
+                        <h4 className="text-sm font-bold text-[#F2EFE6]">{doc.name}</h4>
+                        <p className="text-[11px] text-[#A4B0A6] font-mono">
                           Schedule: {doc.available_days}
                         </p>
-                        <p className="text-[11px] text-[#8B9CB5] font-mono">
-                          Hours: {doc.start_time.slice(0, 5)} - {doc.end_time.slice(0, 5)}
+                        <p className="text-[11px] text-[#A4B0A6] font-mono tabular-nums">
+                          Hours: {doc.start_time.slice(0, 5)} to {doc.end_time.slice(0, 5)}
                         </p>
                       </div>
 
-                      <div className="mt-3 pt-3 border-t border-[#2A2C30] flex items-center justify-between text-xs">
-                        <span className={isSelected ? 'text-blue-400 font-semibold' : 'text-[#8B9CB5]'}>
+                      <div className="mt-3 pt-3 border-t border-[#2C3530] flex items-center justify-between text-xs">
+                        <span className={isSelected ? 'text-[#86D5D4] font-semibold' : 'text-[#A4B0A6]'}>
                           {isSelected ? 'Selected Physician' : 'Click to select'}
                         </span>
                       </div>
@@ -329,27 +322,27 @@ export default function ClinicAppointmentsPage() {
             </div>
 
             {/* Doctor Slots Grid */}
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#2C3530]">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#F1EADE]">
+                  <h3 className="text-sm font-semibold text-[#F2EFE6]">
                     Outpatient Slots for {selectedDoctor?.name || 'Doctor'}
                   </h3>
-                  <p className="text-xs text-[#8B9CB5]">Choose an available time slot</p>
+                  <p className="text-xs text-[#A4B0A6]">Choose an available time slot</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#8B9CB5]">Date:</span>
+                  <span className="text-xs text-[#A4B0A6]">Date:</span>
                   <input
                     type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="bg-[#151415] border border-[#2A2C30] rounded-lg px-2.5 py-1.5 text-xs text-[#F1EADE] font-mono focus:outline-none focus:border-blue-500"
+                    className="bg-[#101211] border border-[#46534A] rounded-xs px-2.5 py-1.5 text-xs text-[#F2EFE6] font-mono"
                   />
                 </div>
               </div>
 
               {slots.length === 0 ? (
-                <div className="p-6 text-center text-xs text-[#8B9CB5] border border-dashed border-[#2A2C30] rounded-lg">
+                <div className="p-6 text-center text-xs text-[#A4B0A6] border border-dashed border-[#46534A] rounded-xs">
                   No predefined slots found for this date. Booking will automatically allocate the next available outpatient slot.
                 </div>
               ) : (
@@ -363,22 +356,22 @@ export default function ClinicAppointmentsPage() {
                         key={s.id}
                         disabled={isBooked}
                         onClick={() => setSelectedSlotId(s.id)}
-                        className={`p-3 rounded-xl border text-left transition-all min-h-[44px] ${
+                        className={`p-3 rounded-xs border text-left transition-colors min-h-[44px] ${
                           isBooked
-                            ? 'bg-[#151415]/50 border-rose-950/40 opacity-50 cursor-not-allowed'
+                            ? 'bg-[#101211]/50 border-[#2C3530] opacity-40 cursor-not-allowed'
                             : isSelected
-                            ? 'bg-blue-950/30 border-blue-500 text-blue-200 ring-1 ring-blue-500'
-                            : 'bg-[#151415] border-[#2A2C30] text-[#F1EADE] hover:border-blue-500/40'
+                            ? 'bg-[#2A322D] border-[#86D5D4] text-[#86D5D4]'
+                            : 'bg-[#101211] border-[#2C3530] text-[#F2EFE6] hover:border-[#46534A]'
                         }`}
                       >
-                        <div className="text-xs font-mono font-bold">
+                        <div className="text-xs font-mono font-bold tabular-nums">
                           {s.start_time.slice(0, 5)} - {s.end_time.slice(0, 5)}
                         </div>
                         <div className="text-[10px] mt-1">
                           {isBooked ? (
-                            <span className="text-rose-400 font-medium">Booked</span>
+                            <span className="text-[#F1A79C] font-medium">Booked</span>
                           ) : (
-                            <span className="text-emerald-400 font-medium">Available</span>
+                            <span className="text-[#69D9AD] font-medium">Available</span>
                           )}
                         </div>
                       </button>
@@ -391,57 +384,57 @@ export default function ClinicAppointmentsPage() {
 
           {/* Booking Summary Sidebar */}
           <div className="space-y-4">
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-blue-400" />
-                <h3 className="text-sm font-semibold text-[#F1EADE]">Booking Confirmation</h3>
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b border-[#2C3530]">
+                <Calendar className="w-4 h-4 text-[#86D5D4]" />
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">Booking Confirmation</h3>
               </div>
 
-              <div className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg space-y-2 text-xs">
+              <div className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-[#8B9CB5]">Physician</span>
-                  <span className="text-[#F1EADE] font-semibold">{selectedDoctor?.name || 'Selected Doctor'}</span>
+                  <span className="text-[#A4B0A6]">Physician</span>
+                  <span className="text-[#F2EFE6] font-semibold">{selectedDoctor?.name || 'Selected Doctor'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8B9CB5]">Department</span>
-                  <span className="text-[#F1EADE]">{selectedDoctor?.department || 'General'}</span>
+                  <span className="text-[#A4B0A6]">Department</span>
+                  <span className="text-[#F2EFE6]">{selectedDoctor?.department || 'General'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8B9CB5]">Date</span>
-                  <span className="text-[#F1EADE] font-mono">{selectedDate}</span>
+                  <span className="text-[#A4B0A6]">Date</span>
+                  <span className="text-[#F2EFE6] font-mono tabular-nums">{selectedDate}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8B9CB5]">Consultation Fee</span>
-                  <span className="text-emerald-400 font-bold font-mono">
+                  <span className="text-[#A4B0A6]">Consultation Fee</span>
+                  <span className="text-[#69D9AD] font-bold font-mono tabular-nums">
                     ₹{((selectedDoctor?.consultation_fee_paise || 30000) / 100).toFixed(0)}
                   </span>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] text-[#8B9CB5]">Scheduling Purpose (Non-Diagnostic Logistics)</label>
+                <label className="text-[11px] text-[#A4B0A6]">Scheduling Category (Non-Diagnostic Logistics)</label>
                 <select
                   value={patientNotes || 'Routine General Consultation'}
                   onChange={(e) => setPatientNotes(e.target.value)}
-                  className="w-full bg-[#151415] border border-[#2A2C30] rounded-lg px-3 py-2 text-xs text-[#F1EADE] focus:outline-none focus:border-blue-500"
+                  className="w-full bg-[#101211] border border-[#46534A] rounded-xs px-3 py-2 text-xs text-[#F2EFE6]"
                 >
                   <option value="Routine General Consultation">Routine General Consultation</option>
                   <option value="Follow-up Consultation">Follow-up Consultation</option>
                   <option value="Report Review & Discussion">Report Review & Discussion</option>
                   <option value="General Health Fitness Check">General Health Fitness Check</option>
                 </select>
-                <p className="text-[10px] text-[#8B9CB5]">
-                  Strictly administrative logistics. Freeform medical symptoms are blocked server-side.
+                <p className="text-[10px] text-[#A4B0A6]">
+                  Strictly administrative logistics. Clinical symptoms are rejected server-side.
                 </p>
               </div>
 
               <button
                 onClick={handleBookAppointment}
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all min-h-[44px] shadow-lg shadow-blue-950/40"
+                className="min-h-[44px] w-full py-2.5 rounded-xs bg-[#69D9AD] hover:bg-[#86D5D4] disabled:opacity-50 text-[#101211] font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                Confirm Appointment (₹{((selectedDoctor?.consultation_fee_paise || 30000) / 100).toFixed(0)})
+                <span>Confirm Appointment (₹{((selectedDoctor?.consultation_fee_paise || 30000) / 100).toFixed(0)})</span>
               </button>
             </div>
           </div>
@@ -451,32 +444,32 @@ export default function ClinicAppointmentsPage() {
       {/* DOCTOR / OPERATOR TAB */}
       {activeTab === 'doctor' && (
         <div className="space-y-6">
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#2C3530]">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-blue-400" />
+                <Users className="w-5 h-5 text-[#86D5D4]" />
                 <div>
-                  <h3 className="text-sm font-semibold text-[#F1EADE]">Clinic Outpatient Schedule Manifest</h3>
-                  <p className="text-xs text-[#8B9CB5]">All registered patient bookings and administrative statuses</p>
+                  <h3 className="text-sm font-semibold text-[#F2EFE6]">Clinic Outpatient Schedule Manifest</h3>
+                  <p className="text-xs text-[#A4B0A6]">All registered patient bookings and administrative statuses</p>
                 </div>
               </div>
               <button
                 onClick={loadAppointments}
-                className="p-2 text-[#8B9CB5] hover:text-[#F1EADE] transition-colors"
-                title="Refresh schedule"
+                className="min-h-[44px] px-3.5 py-1.5 bg-[#202622] text-[#A4B0A6] hover:text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs flex items-center gap-1.5"
               >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                <span>Refresh</span>
               </button>
             </div>
 
             {appointments.length === 0 ? (
-              <div className="p-8 text-center text-xs text-[#8B9CB5] border border-dashed border-[#2A2C30] rounded-lg">
+              <div className="p-8 text-center text-xs text-[#A4B0A6] border border-dashed border-[#46534A] rounded-xs">
                 No active appointments booked in this clinic.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#151415] text-[#8B9CB5] border-b border-[#2A2C30]">
+                  <thead className="bg-[#101211] text-[#A4B0A6] border-b border-[#46534A] font-mono">
                     <tr>
                       <th className="p-3">Appointment ID</th>
                       <th className="p-3">Patient</th>
@@ -487,31 +480,31 @@ export default function ClinicAppointmentsPage() {
                       <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#2A2C30] font-mono">
+                  <tbody className="divide-y divide-[#2C3530] font-mono">
                     {appointments.map((a) => (
-                      <tr key={a.id} className="hover:bg-[#242528]/40">
-                        <td className="p-3 text-[#F1EADE] font-bold">{a.id}</td>
-                        <td className="p-3 text-[#F1EADE]">
+                      <tr key={a.id} className="hover:bg-[#202622]">
+                        <td className="p-3 text-[#F2EFE6] font-bold">{a.id}</td>
+                        <td className="p-3 text-[#F2EFE6]">
                           {a.patient_name}
-                          <span className="block text-[10px] text-[#8B9CB5] font-normal">{a.patient_phone}</span>
+                          <span className="block text-[10px] text-[#A4B0A6] font-normal">{a.patient_phone}</span>
                         </td>
-                        <td className="p-3 text-[#8B9CB5]">
+                        <td className="p-3 text-[#A4B0A6]">
                           {a.doctor_name}
-                          <span className="block text-[10px] text-[#8B9CB5]">{a.department}</span>
+                          <span className="block text-[10px] text-[#A4B0A6]">{a.department}</span>
                         </td>
-                        <td className="p-3 text-[#F1EADE]">
+                        <td className="p-3 text-[#F2EFE6]">
                           {a.appointment_date}
-                          <span className="block text-[11px] text-blue-400 font-bold">{a.time_slot}</span>
+                          <span className="block text-[11px] text-[#86D5D4] font-bold">{a.time_slot}</span>
                         </td>
-                        <td className="p-3 text-emerald-400 font-bold">
+                        <td className="p-3 text-[#69D9AD] font-bold tabular-nums">
                           ₹{(a.consultation_fee_paise / 100).toFixed(0)}
                         </td>
                         <td className="p-3">
                           <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
+                            className={`px-2 py-0.5 rounded-xs text-[10px] font-semibold border ${
                               a.status === 'CONFIRMED'
-                                ? 'bg-emerald-950/60 text-emerald-300 border-emerald-800'
-                                : 'bg-rose-950/60 text-rose-300 border-rose-800'
+                                ? 'bg-[#202622] text-[#A4E4B5] border-[#A4E4B5]'
+                                : 'bg-[#202622] text-[#F1A79C] border-[#F1A79C]'
                             }`}
                           >
                             {a.status}
@@ -521,7 +514,7 @@ export default function ClinicAppointmentsPage() {
                           {a.status === 'CONFIRMED' && (
                             <button
                               onClick={() => handleCancelAppointment(a.id)}
-                              className="px-2.5 py-1 rounded bg-[#2A2C30] hover:bg-rose-900/60 text-rose-300 text-[11px] font-medium transition-all min-h-[36px]"
+                              className="min-h-[36px] px-2.5 py-1 rounded-xs bg-[#202622] hover:bg-[#2A322D] text-[#F1A79C] border border-[#F1A79C] text-[11px] font-medium transition-colors"
                             >
                               Cancel & Free Slot
                             </button>

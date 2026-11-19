@@ -6,17 +6,12 @@ import {
   Sprout,
   Truck,
   CheckCircle2,
-  Calendar,
-  Layers,
-  MapPin,
-  Clock,
   RefreshCw,
-  Sparkles,
-  DollarSign,
   AlertCircle,
 } from 'lucide-react';
 import { ModuleStatusBadge } from '@/components/ModuleStatusBadge';
 import { VoiceActionCard } from '@/components/VoiceActionCard';
+import IndustryAccentScene from '@/components/spatial/IndustryAccentScene';
 
 export default function AgriculturePage() {
   const [activeTab, setActiveTab] = useState<'farmer' | 'buyer'>('farmer');
@@ -98,7 +93,7 @@ export default function AgriculturePage() {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setActionSuccess(data.result?.summary || 'Procurement request registered successfully!');
+        setActionSuccess(data.result?.summary || 'Procurement request registered successfully.');
         await loadData();
         setTimeout(() => setActionSuccess(null), 4000);
       } else {
@@ -137,7 +132,6 @@ export default function AgriculturePage() {
     }
   }
 
-  // Summary Metrics for Buyer Tab
   const totalVolumeQuintals = requests
     .filter((r) => r.status !== 'CANCELLED')
     .reduce((acc, r) => acc + (r.estimated_volume_quintals || 0), 0);
@@ -148,73 +142,69 @@ export default function AgriculturePage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header with Spatial Accent */}
+      <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-            <Tractor className="w-6 h-6" />
-          </div>
+          <IndustryAccentScene moduleType="agriculture" accentColor="#DAB77A" />
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-[#F1EADE]">Agri Produce Procurement</h1>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-[#F2EFE6]">
+                Agri Produce Procurement
+              </h1>
               <ModuleStatusBadge status="active" />
             </div>
-            <p className="text-xs text-[#8B9CB5] mt-1">
-              Kisan Samriddhi Agri Procurement · Harvest volume lots (quintals), farm-gate pickup scheduling, and MSP pricing
+            <p className="text-xs text-[#A4B0A6] mt-1 font-mono">
+              Kisan Samriddhi Platform : Harvest lots (quintals), farm-gate pickup logistics, and official CCEA MSP benchmarks
             </p>
           </div>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center bg-[#151415] p-1 rounded-xl border border-[#2A2C30]">
+        {/* Tab Switcher with min 44px targets */}
+        <div className="flex items-center bg-[#101211] p-1 rounded-xs border border-[#46534A]">
           <button
             onClick={() => setActiveTab('farmer')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all min-h-[44px] ${
+            className={`min-h-[44px] flex items-center gap-2 px-4 py-2 rounded-xs text-xs font-semibold transition-all ${
               activeTab === 'farmer'
-                ? 'bg-amber-600 text-white shadow-md'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#DAB77A]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <Sprout className="w-4 h-4" />
-            Farmer Harvest Registration
+            <Sprout className="w-4 h-4 text-[#DAB77A]" />
+            <span>Farmer Harvest Registration</span>
           </button>
           <button
             onClick={() => setActiveTab('buyer')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all min-h-[44px] ${
+            className={`min-h-[44px] flex items-center gap-2 px-4 py-2 rounded-xs text-xs font-semibold transition-all ${
               activeTab === 'buyer'
-                ? 'bg-amber-600 text-white shadow-md'
-                : 'text-[#8B9CB5] hover:text-[#F1EADE]'
+                ? 'bg-[#2A322D] text-[#F2EFE6] border border-[#69D9AD]'
+                : 'text-[#A4B0A6] hover:text-[#F2EFE6]'
             }`}
           >
-            <Truck className="w-4 h-4" />
-            Buyer Procurement Logistics
+            <Truck className="w-4 h-4 text-[#69D9AD]" />
+            <span>Buyer Procurement Logistics</span>
           </button>
         </div>
       </div>
 
       {actionSuccess && (
-        <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-sm flex items-center gap-3 animate-fade-in">
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+        <div className="p-3 bg-[#202622] border border-[#A4E4B5] rounded-xs text-xs text-[#A4E4B5] flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-[#A4E4B5] shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-300 text-sm flex items-center gap-3 animate-fade-in">
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+        <div className="p-3 bg-[#202622] border border-[#F1A79C] rounded-xs text-xs text-[#F1A79C] flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-[#F1A79C] shrink-0" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {/* Voice Action Card */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-[#F1EADE] flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            Natural Speech Harvest Registration (Hinglish/Hindi/English)
-          </h2>
-          <span className="text-[10px] text-[#8B9CB5] font-mono">Deterministic Intent Router Ready</span>
-        </div>
+        <h2 className="text-xs font-semibold text-[#F2EFE6] uppercase font-mono tracking-wider">
+          Voice Harvest Registration Dispatch
+        </h2>
         <VoiceActionCard
           verticalType="agriculture"
           workspaceId="ws_agri_01"
@@ -244,20 +234,21 @@ export default function AgriculturePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Active Crop Procurement Board */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#2C3530]">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#F1EADE]">Crop Procurement Rate Board</h3>
-                  <p className="text-xs text-[#8B9CB5]">
-                    Official MSP benchmarks (PIB PRID 2269182) for mandated crops and indicative spot rates for non-MSP produce
+                  <h3 className="text-sm font-semibold text-[#F2EFE6]">Crop Procurement Rate Board</h3>
+                  <p className="text-xs text-[#A4B0A6]">
+                    Official CCEA MSP benchmarks (PIB PRID 2269182) and verified spot rates for non-MSP produce
                   </p>
                 </div>
                 <button
                   onClick={loadData}
-                  className="p-2 text-[#8B9CB5] hover:text-[#F1EADE] transition-colors"
+                  className="min-h-[44px] px-3 py-1.5 text-xs text-[#A4B0A6] hover:text-[#F2EFE6] flex items-center gap-1.5 border border-[#46534A] rounded-xs bg-[#202622]"
                   title="Refresh rates"
                 >
-                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                  <span>Refresh</span>
                 </button>
               </div>
 
@@ -271,46 +262,46 @@ export default function AgriculturePage() {
                     <div
                       key={c.id}
                       onClick={() => setSelectedCropId(c.id)}
-                      className={`cursor-pointer rounded-xl p-4 border transition-all flex flex-col justify-between ${
+                      className={`cursor-pointer rounded-xs p-4 border transition-colors flex flex-col justify-between ${
                         isSelected
-                          ? 'bg-amber-950/20 border-amber-500 shadow-md ring-1 ring-amber-500/30'
-                          : 'bg-[#151415] border-[#2A2C30] hover:border-amber-500/40'
+                          ? 'bg-[#2A322D] border-[#DAB77A]'
+                          : 'bg-[#101211] border-[#2C3530] hover:border-[#46534A]'
                       }`}
                     >
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between gap-2">
                           <span
-                            className={`text-[10px] font-semibold px-2 py-0.5 rounded border font-mono ${
+                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-xs border font-mono ${
                               isMsp
-                                ? 'bg-emerald-950/60 text-emerald-300 border-emerald-800'
-                                : 'bg-zinc-900 text-zinc-400 border-zinc-700'
+                                ? 'bg-[#202622] text-[#A4E4B5] border-[#A4E4B5]'
+                                : 'bg-[#202622] text-[#A4B0A6] border-[#46534A]'
                             }`}
                           >
                             {isMsp ? 'Official MSP' : 'Indicative Spot'}
                           </span>
-                          <span className="text-xs font-bold text-emerald-400 font-mono">
+                          <span className="text-xs font-bold text-[#69D9AD] font-mono tabular-nums">
                             ₹{ratePerQuintal} / q
                           </span>
                         </div>
-                        <h4 className="text-sm font-bold text-[#F1EADE]">{c.crop_name}</h4>
-                        <p className="text-[11px] text-[#8B9CB5]">Variety: {c.variety}</p>
+                        <h4 className="text-sm font-bold text-[#F2EFE6]">{c.crop_name}</h4>
+                        <p className="text-[11px] text-[#A4B0A6]">Variety: {c.variety}</p>
 
                         {isMsp ? (
-                          <div className="text-[10px] text-emerald-400/90 space-y-0.5 pt-1 border-t border-[#2A2C30]">
+                          <div className="text-[10px] text-[#A4E4B5] space-y-0.5 pt-1 border-t border-[#2C3530]">
                             <div>Season: {c.marketing_season || 'RMS 2025-26'}</div>
-                            <div className="truncate">
+                            <div className="truncate font-mono">
                               Source: {c.source_name || 'CCEA, Govt. of India (PIB)'}
                             </div>
                           </div>
                         ) : (
-                          <div className="text-[10px] text-[#8B9CB5] pt-1 border-t border-[#2A2C30]">
-                            Non-MSP crop · Mandi negotiated spot value
+                          <div className="text-[10px] text-[#A4B0A6] pt-1 border-t border-[#2C3530]">
+                            Non-MSP perishable crop : Mandi spot market rate
                           </div>
                         )}
                       </div>
 
-                      <div className="mt-3 pt-2.5 border-t border-[#2A2C30] flex items-center justify-between text-xs">
-                        <span className={isSelected ? 'text-amber-400 font-semibold' : 'text-[#8B9CB5]'}>
+                      <div className="mt-3 pt-2.5 border-t border-[#2C3530] flex items-center justify-between text-xs">
+                        <span className={isSelected ? 'text-[#DAB77A] font-semibold' : 'text-[#A4B0A6]'}>
                           {isSelected ? 'Selected Crop' : 'Click to select'}
                         </span>
                         {c.source_url && (
@@ -319,7 +310,7 @@ export default function AgriculturePage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="text-[10px] text-blue-400 hover:underline"
+                            className="text-[10px] text-[#86D5D4] hover:underline font-mono"
                           >
                             PIB Ref ↗
                           </a>
@@ -331,39 +322,39 @@ export default function AgriculturePage() {
               </div>
             </div>
 
-            {/* Farm Gate Pickup Routes Info */}
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-3">
+            {/* Farm Gate Pickup Policy */}
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-2">
               <div className="flex items-center gap-2">
-                <Truck className="w-4 h-4 text-amber-400" />
-                <h3 className="text-sm font-semibold text-[#F1EADE]">Direct Farm-Gate Logistics Policy</h3>
+                <Truck className="w-4 h-4 text-[#DAB77A]" />
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">Direct Farm-Gate Logistics Policy</h3>
               </div>
-              <p className="text-xs text-[#8B9CB5] leading-relaxed">
-                ZYVO procurement partners provide weighing and direct farm-gate collection for harvest lots over 5 quintals. Rates are benchmarked against official mandi minimum support criteria, with zero broker deduction.
+              <p className="text-xs text-[#C3CBC3] leading-relaxed">
+                ZYVO procurement partners provide weighing and direct farm-gate collection for harvest lots over 5 quintals. Rates are benchmarked against official mandi minimum support criteria with zero broker deductions.
               </p>
             </div>
           </div>
 
           {/* Harvest Registration Form */}
           <div className="space-y-4">
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-              <div className="flex items-center gap-2">
-                <Sprout className="w-4 h-4 text-amber-400" />
-                <h3 className="text-sm font-semibold text-[#F1EADE]">Register Harvest Lot</h3>
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b border-[#2C3530]">
+                <Sprout className="w-4 h-4 text-[#DAB77A]" />
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">Register Harvest Lot</h3>
               </div>
 
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="text-[11px] text-[#8B9CB5] block mb-1">Selected Crop</label>
-                  <div className="p-2.5 bg-[#151415] border border-[#2A2C30] rounded-lg text-[#F1EADE] font-semibold flex justify-between">
+                  <label className="text-[11px] text-[#A4B0A6] block mb-1">Selected Crop</label>
+                  <div className="p-2.5 bg-[#101211] border border-[#2C3530] rounded-xs text-[#F2EFE6] font-semibold flex justify-between">
                     <span>{selectedCrop?.crop_name || 'Crop'}</span>
-                    <span className="text-emerald-400 font-mono">
+                    <span className="text-[#69D9AD] font-mono tabular-nums">
                       ₹{((selectedCrop?.indicative_rate_paise_per_quintal || 150000) / 100).toLocaleString('en-IN')}/q
                     </span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[11px] text-[#8B9CB5] block mb-1">Harvest Volume</label>
+                  <label className="text-[11px] text-[#A4B0A6] block mb-1">Harvest Volume</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="number"
@@ -371,12 +362,12 @@ export default function AgriculturePage() {
                       step="any"
                       value={volumeInput}
                       onChange={(e) => setVolumeInput(parseFloat(e.target.value) || 0)}
-                      className="w-2/3 bg-[#151415] border border-[#2A2C30] rounded-lg px-3 py-2 text-xs text-[#F1EADE] font-mono focus:outline-none focus:border-amber-500"
+                      className="w-2/3 bg-[#101211] border border-[#46534A] rounded-xs px-3 py-2 text-xs text-[#F2EFE6] font-mono tabular-nums"
                     />
                     <select
                       value={unit}
                       onChange={(e: any) => setUnit(e.target.value)}
-                      className="w-1/3 bg-[#151415] border border-[#2A2C30] rounded-lg px-2 py-2 text-xs text-[#F1EADE] focus:outline-none focus:border-amber-500"
+                      className="w-1/3 bg-[#101211] border border-[#46534A] rounded-xs px-2 py-2 text-xs text-[#F2EFE6]"
                     >
                       <option value="quintals">Quintals</option>
                       <option value="kg">Kilograms</option>
@@ -384,60 +375,60 @@ export default function AgriculturePage() {
                     </select>
                   </div>
                   {unit !== 'quintals' && (
-                    <p className="text-[10px] text-amber-300/80 mt-1 font-mono">
+                    <p className="text-[10px] text-[#DAB77A] mt-1 font-mono tabular-nums">
                       = {volumeQuintals.toFixed(2)} quintals
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="text-[11px] text-[#8B9CB5] block mb-1">Farm Pickup Location</label>
+                  <label className="text-[11px] text-[#A4B0A6] block mb-1">Farm Pickup Location</label>
                   <input
                     type="text"
                     value={pickupLocation}
                     onChange={(e) => setPickupLocation(e.target.value)}
-                    className="w-full bg-[#151415] border border-[#2A2C30] rounded-lg px-3 py-2 text-xs text-[#F1EADE] focus:outline-none focus:border-amber-500"
+                    className="w-full bg-[#101211] border border-[#46534A] rounded-xs px-3 py-2 text-xs text-[#F2EFE6]"
                     placeholder="Field number / Landmark / Gate"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] text-[#8B9CB5] block mb-1">Preferred Pickup Date</label>
+                  <label className="text-[11px] text-[#A4B0A6] block mb-1">Preferred Pickup Date</label>
                   <input
                     type="date"
                     value={preferredDate}
                     onChange={(e) => setPreferredDate(e.target.value)}
-                    className="w-full bg-[#151415] border border-[#2A2C30] rounded-lg px-3 py-2 text-xs text-[#F1EADE] font-mono focus:outline-none focus:border-amber-500"
+                    className="w-full bg-[#101211] border border-[#46534A] rounded-xs px-3 py-2 text-xs text-[#F2EFE6] font-mono"
                   />
                 </div>
 
-                <div className="p-3 bg-[#151415] border border-[#2A2C30] rounded-lg space-y-1">
-                  <div className="flex justify-between text-[#8B9CB5]">
+                <div className="p-3 bg-[#101211] border border-[#2C3530] rounded-xs space-y-1">
+                  <div className="flex justify-between text-[#A4B0A6]">
                     <span>
-                      {selectedCrop?.is_msp_mandated === 1 ? 'Official MSP Rate' : 'Indicative Mandi Rate'}
+                      {selectedCrop?.is_msp_mandated === 1 ? 'Official MSP Benchmark' : 'Indicative Mandi Spot'}
                     </span>
-                    <span className="font-mono">
+                    <span className="font-mono tabular-nums">
                       ₹{((selectedCrop?.indicative_rate_paise_per_quintal || 150000) / 100).toLocaleString('en-IN')}/q
                     </span>
                   </div>
-                  <div className="flex justify-between text-xs pt-1 border-t border-[#2A2C30]">
-                    <span className="text-[#F1EADE] font-semibold">Total Indicative Payout</span>
-                    <span className="text-emerald-400 font-bold font-mono">
+                  <div className="flex justify-between text-xs pt-1 border-t border-[#2C3530]">
+                    <span className="text-[#F2EFE6] font-semibold">Total Indicative Payout</span>
+                    <span className="text-[#69D9AD] font-bold font-mono tabular-nums">
                       ₹{(estimatedPayoutPaise / 100).toLocaleString('en-IN')}
                     </span>
                   </div>
-                  <p className="text-[10px] text-[#8B9CB5] pt-1">
-                    Indicative payout estimate based on quality inspection; not a government purchase guarantee.
+                  <p className="text-[10px] text-[#A4B0A6] pt-1">
+                    Indicative payout based on harvest volume; verified upon mandi quality check.
                   </p>
                 </div>
 
                 <button
                   onClick={handleRegisterProcurement}
                   disabled={loading}
-                  className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all min-h-[44px] shadow-lg shadow-amber-950/40"
+                  className="min-h-[44px] w-full py-2.5 rounded-xs bg-[#69D9AD] hover:bg-[#86D5D4] disabled:opacity-50 text-[#101211] font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
                 >
                   <CheckCircle2 className="w-4 h-4" />
-                  Register Lot (₹{(estimatedPayoutPaise / 100).toLocaleString('en-IN')})
+                  <span>Register Lot (₹{(estimatedPayoutPaise / 100).toLocaleString('en-IN')})</span>
                 </button>
               </div>
             </div>
@@ -450,52 +441,52 @@ export default function AgriculturePage() {
         <div className="space-y-6">
           {/* Summary Metric Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-4 space-y-1">
-              <span className="text-xs text-[#8B9CB5]">Active Procurement Lots</span>
-              <div className="text-xl font-bold text-[#F1EADE] font-mono">
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-4 space-y-1">
+              <span className="text-xs text-[#A4B0A6] font-mono">Active Procurement Lots</span>
+              <div className="text-xl font-bold text-[#F2EFE6] font-mono tabular-nums">
                 {requests.filter((r) => r.status !== 'CANCELLED').length}
               </div>
             </div>
 
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-4 space-y-1">
-              <span className="text-xs text-[#8B9CB5]">Total Harvest Volume</span>
-              <div className="text-xl font-bold text-amber-400 font-mono">
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-4 space-y-1">
+              <span className="text-xs text-[#A4B0A6] font-mono">Total Harvest Volume</span>
+              <div className="text-xl font-bold text-[#DAB77A] font-mono tabular-nums">
                 {totalVolumeQuintals.toFixed(1)} quintals
               </div>
             </div>
 
-            <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-4 space-y-1">
-              <span className="text-xs text-[#8B9CB5]">Committed Payout Value</span>
-              <div className="text-xl font-bold text-emerald-400 font-mono">
+            <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-4 space-y-1">
+              <span className="text-xs text-[#A4B0A6] font-mono">Committed Payout Value</span>
+              <div className="text-xl font-bold text-[#69D9AD] font-mono tabular-nums">
                 ₹{(totalCommittedPayoutPaise / 100).toLocaleString('en-IN')}
               </div>
             </div>
           </div>
 
           {/* Active Procurement Requests Table */}
-          <div className="bg-[#1B1C1E] border border-[#2A2C30] rounded-xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="bg-[#171B19] border border-[#46534A] rounded-xs p-5 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#2C3530]">
               <div className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-amber-400" />
-                <h3 className="text-sm font-semibold text-[#F1EADE]">Procurement Offers & Logistics Queue</h3>
+                <Truck className="w-5 h-5 text-[#DAB77A]" />
+                <h3 className="text-sm font-semibold text-[#F2EFE6]">Procurement Offers & Logistics Queue</h3>
               </div>
               <button
                 onClick={loadData}
-                className="p-2 text-[#8B9CB5] hover:text-[#F1EADE] transition-colors"
-                title="Refresh requests"
+                className="min-h-[44px] px-3.5 py-1.5 bg-[#202622] text-[#A4B0A6] hover:text-[#F2EFE6] border border-[#46534A] rounded-xs text-xs flex items-center gap-1.5"
               >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                <span>Refresh</span>
               </button>
             </div>
 
             {requests.length === 0 ? (
-              <div className="p-8 text-center text-xs text-[#8B9CB5] border border-dashed border-[#2A2C30] rounded-lg">
+              <div className="p-8 text-center text-xs text-[#A4B0A6] border border-dashed border-[#46534A] rounded-xs">
                 No procurement offers registered yet.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#151415] text-[#8B9CB5] border-b border-[#2A2C30]">
+                  <thead className="bg-[#101211] text-[#A4B0A6] border-b border-[#46534A] font-mono">
                     <tr>
                       <th className="p-3">Request ID</th>
                       <th className="p-3">Farmer</th>
@@ -506,41 +497,39 @@ export default function AgriculturePage() {
                       <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#2A2C30] font-mono">
+                  <tbody className="divide-y divide-[#2C3530] font-mono">
                     {requests.map((r) => (
-                      <tr key={r.id} className="hover:bg-[#242528]/40">
-                        <td className="p-3 text-[#F1EADE] font-bold">{r.id}</td>
-                        <td className="p-3 text-[#F1EADE]">
+                      <tr key={r.id} className="hover:bg-[#202622]">
+                        <td className="p-3 text-[#F2EFE6] font-bold">{r.id}</td>
+                        <td className="p-3 text-[#F2EFE6]">
                           {r.farmer_name}
-                          <span className="block text-[10px] text-[#8B9CB5] font-normal">{r.farmer_phone}</span>
+                          <span className="block text-[10px] text-[#A4B0A6] font-normal">{r.farmer_phone}</span>
                         </td>
-                        <td className="p-3 text-[#F1EADE]">
+                        <td className="p-3 text-[#F2EFE6]">
                           {r.crop_name} ({r.variety})
-                          <span className="block text-[11px] text-amber-400 font-bold">
+                          <span className="block text-[11px] text-[#DAB77A] font-bold tabular-nums">
                             {r.estimated_volume_quintals} quintals
                           </span>
                         </td>
-                        <td className="p-3 text-[#8B9CB5]">
+                        <td className="p-3 text-[#A4B0A6]">
                           {r.pickup_date || 'Standard'}
-                          <span className="block text-[10px] text-[#8B9CB5] truncate max-w-xs">
+                          <span className="block text-[10px] text-[#A4B0A6] truncate max-w-xs">
                             {r.schedule?.pickup_location || 'Farm Gate'}
                           </span>
                         </td>
-                        <td className="p-3 text-emerald-400 font-bold">
+                        <td className="p-3 text-[#69D9AD] font-bold tabular-nums">
                           ₹{(r.total_estimated_payout_paise / 100).toLocaleString('en-IN')}
                         </td>
                         <td className="p-3">
                           <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
+                            className={`px-2 py-0.5 rounded-xs text-[10px] font-semibold border ${
                               r.status === 'COLLECTED'
-                                ? 'bg-emerald-950/60 text-emerald-300 border-emerald-800'
+                                ? 'bg-[#202622] text-[#A4E4B5] border-[#A4E4B5]'
                                 : r.status === 'PICKUP_SCHEDULED'
-                                ? 'bg-amber-950/60 text-amber-300 border-amber-800'
+                                ? 'bg-[#202622] text-[#DAB77A] border-[#DAB77A]'
                                 : r.status === 'VERIFIED'
-                                ? 'bg-blue-950/60 text-blue-300 border-blue-800'
-                                : r.status === 'CANCELLED'
-                                ? 'bg-rose-950/60 text-rose-300 border-rose-800'
-                                : 'bg-gray-800 text-gray-300 border-gray-700'
+                                ? 'bg-[#202622] text-[#86D5D4] border-[#86D5D4]'
+                                : 'bg-[#202622] text-[#A4B0A6] border-[#46534A]'
                             }`}
                           >
                             {r.status}
@@ -550,7 +539,7 @@ export default function AgriculturePage() {
                           {r.status === 'REGISTERED' && (
                             <button
                               onClick={() => handleUpdateStatus(r.id, 'VERIFIED')}
-                              className="px-2 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-medium transition-all"
+                              className="min-h-[36px] px-2.5 py-1 rounded-xs bg-[#202622] hover:bg-[#2A322D] text-[#86D5D4] border border-[#86D5D4] text-[10px] font-medium font-sans"
                             >
                               Verify Lot
                             </button>
@@ -558,7 +547,7 @@ export default function AgriculturePage() {
                           {r.status === 'VERIFIED' && (
                             <button
                               onClick={() => handleUpdateStatus(r.id, 'PICKUP_SCHEDULED')}
-                              className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white text-[10px] font-medium transition-all"
+                              className="min-h-[36px] px-2.5 py-1 rounded-xs bg-[#202622] hover:bg-[#2A322D] text-[#DAB77A] border border-[#DAB77A] text-[10px] font-medium font-sans"
                             >
                               Schedule Pickup
                             </button>
@@ -566,7 +555,7 @@ export default function AgriculturePage() {
                           {r.status === 'PICKUP_SCHEDULED' && (
                             <button
                               onClick={() => handleUpdateStatus(r.id, 'COLLECTED')}
-                              className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-medium transition-all"
+                              className="min-h-[36px] px-2.5 py-1 rounded-xs bg-[#69D9AD] hover:bg-[#86D5D4] text-[#101211] text-[10px] font-semibold font-sans"
                             >
                               Mark Collected
                             </button>
