@@ -141,15 +141,18 @@ CREATE TABLE IF NOT EXISTS kirana_grocery_orders (
   customer_id TEXT NOT NULL REFERENCES users(id),
   order_status TEXT NOT NULL,
   total_amount_paise INTEGER NOT NULL,
+  delivery_address TEXT DEFAULT 'Default Customer Address',
   source_submission_id TEXT REFERENCES voice_submissions(id),
+  voice_submission_id TEXT REFERENCES voice_submissions(id),
   created_at TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS kirana_grocery_order_items (
   id TEXT PRIMARY KEY,
   order_id TEXT NOT NULL REFERENCES kirana_grocery_orders(id) ON DELETE CASCADE,
-  catalog_id TEXT NOT NULL REFERENCES kirana_product_catalog(id),
+  catalog_id TEXT REFERENCES kirana_product_catalog(id),
   item_name TEXT NOT NULL,
+  requested_item_name TEXT,
   quantity REAL NOT NULL,
   unit TEXT NOT NULL,
   unit_price_paise INTEGER NOT NULL,
@@ -179,21 +182,28 @@ CREATE TABLE IF NOT EXISTS vegetable_orders (
   workspace_id TEXT NOT NULL REFERENCES workspaces(id),
   customer_id TEXT NOT NULL REFERENCES users(id),
   order_status TEXT NOT NULL,
+  status TEXT,
   total_amount_paise INTEGER NOT NULL,
-  delivery_date TEXT NOT NULL,
+  estimated_total_paise INTEGER,
+  delivery_date TEXT,
+  delivery_address TEXT DEFAULT 'Doorstep Drop',
   source_submission_id TEXT REFERENCES voice_submissions(id),
+  voice_submission_id TEXT REFERENCES voice_submissions(id),
   created_at TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS vegetable_order_items (
   id TEXT PRIMARY KEY,
   order_id TEXT NOT NULL REFERENCES vegetable_orders(id) ON DELETE CASCADE,
-  produce_id TEXT NOT NULL REFERENCES vegetable_produce_catalog(id),
+  produce_id TEXT REFERENCES vegetable_produce_catalog(id),
   produce_name TEXT NOT NULL,
+  requested_item_name TEXT,
   quantity REAL NOT NULL,
   unit TEXT NOT NULL,
   unit_price_paise INTEGER NOT NULL,
-  subtotal_paise INTEGER NOT NULL
+  unit_rate_paise INTEGER,
+  subtotal_paise INTEGER NOT NULL,
+  estimated_item_paise INTEGER
 );
 
 -- Module 4: Clinic Appointments Entities

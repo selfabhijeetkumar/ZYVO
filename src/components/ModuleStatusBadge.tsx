@@ -1,14 +1,14 @@
 import React from 'react';
 
 interface ModuleStatusBadgeProps {
-  status: 'active_reference' | 'foundation_ready';
+  status: 'active_reference' | 'foundation_ready' | 'active';
   label?: string;
   size?: 'sm' | 'md';
 }
 
 export function ModuleStatusBadge({ status, label, size = 'sm' }: ModuleStatusBadgeProps) {
-  const isReference = status === 'active_reference';
-  const displayLabel = label || (isReference ? 'Active Reference Workflow' : 'Foundation Ready');
+  const isReference = status === 'active_reference' || status === 'active';
+  const displayLabel = label || (isReference ? 'Active Workflow' : 'Foundation Ready');
 
   const textClass = size === 'sm' ? 'text-xs px-2.5 py-1' : 'text-sm px-3 py-1.5';
 

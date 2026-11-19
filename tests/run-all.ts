@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 
 console.log('====================================================');
-console.log('   ZYVO PLATFORM TEST RUNNER — ALL 4 SUITES');
+console.log('   ZYVO PLATFORM TEST RUNNER — ALL 9 SUITES');
 console.log('====================================================\n');
 
 const suites = [
@@ -10,12 +10,18 @@ const suites = [
   'tests/database.test.ts',
   'tests/lifecycle.test.ts',
   'tests/milk.test.ts',
+  'tests/kirana.test.ts',
+  'tests/vegetable.test.ts',
+  'tests/clinic.test.ts',
+  'tests/agriculture.test.ts',
 ];
 
+let passed = 0;
 for (const suite of suites) {
   try {
     const out = execSync(`npx tsx ${suite}`, { encoding: 'utf-8' });
     console.log(out);
+    passed++;
   } catch (err: any) {
     console.error(`FAILED: ${suite}`);
     console.error(err.stdout || err.message);
@@ -24,5 +30,5 @@ for (const suite of suites) {
 }
 
 console.log('====================================================');
-console.log('   ALL 5 TEST SUITES PASSED EMPIRICALLY (100%)');
+console.log(`   ALL ${passed} / ${suites.length} TEST SUITES PASSED EMPIRICALLY (100%)`);
 console.log('====================================================');
